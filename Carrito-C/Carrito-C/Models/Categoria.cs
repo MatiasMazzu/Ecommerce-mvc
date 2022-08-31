@@ -2,7 +2,7 @@
 
 namespace Carrito_C.Models
 {
-    public class Categoriacs
+    public class Categoria
     {
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
