@@ -1,6 +1,6 @@
 ﻿namespace Carrito_C.Models
 {
-    public class Cliente : Persona
+    public class Persona
     {
     }
 }
