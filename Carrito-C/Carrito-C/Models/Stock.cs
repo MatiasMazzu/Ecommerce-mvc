@@ -7,7 +7,7 @@ namespace Carrito_C.Models
     {
 
         public int Id { get; set; }
-        [StringLength(50, MinimumLength = 2, ErrorMessage = MsgError.ErrorNombres)]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = MsgError.CommonError)]
         public List <Producto> Productos { get; set; }
         public int Cantidad { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿namespace Carrito_C.Models
 {
-    public class Usuario
+    public class Usuario : Persona
     {
+        public string Pasword { get; set; } 
     }
 }
