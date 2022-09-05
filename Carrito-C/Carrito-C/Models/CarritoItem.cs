@@ -5,9 +5,9 @@
 
         public int CarritoItemId { get; set; }
 
-        public string carrito { get; set; }
+        public Carrito carrito { get; set; }
 
-        public String producto { get; set; }
+        public Producto producto { get; set; }
 
         public int valorUnitario { get; set; }
 

@@ -18,6 +18,8 @@ namespace Carrito_C.Models
         [Required(ErrorMessage = MsgError.Requerido)]
         [Range(0, 10000, ErrorMessage = MsgError.CommonError)]
         public int PrecioVigente { get; set; }
+
+
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
         public string Categoria { get; set; }

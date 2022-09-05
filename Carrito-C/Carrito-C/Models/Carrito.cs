@@ -3,9 +3,9 @@
     public class Carrito
     {
         public int CarritoId { get; set; }
-        public String activo { get; set; }
-        public String cliente { get; set; }
-        public String carritoItem { get; set; }
+        public Boolean activo { get; set; }
+        public Cliente cliente { get; set; }
+        public List <CarritoItem> CarritoItems{ get; set; }
 
         public List<Producto> Productos { get; set; }
         public int subtotal { get; set; }
