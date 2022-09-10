@@ -8,19 +8,19 @@ namespace Carrito_C.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.NombreMaxString, MinimumLength = Validaciones.NombreMinString, ErrorMessage = MsgError.CommonError)]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.ApellidoMaxString, MinimumLength = Validaciones.ApellidoMinString, ErrorMessage = MsgError.CommonError)]
         public string Apellido { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(100000, 99999999, ErrorMessage = MsgError.CommonError2)]
+        [Range(Validaciones.TelefonoMinRange, Validaciones.TelefonoMaxRange, ErrorMessage = MsgError.CommonError2)]
         public int Telefono { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(50, MinimumLength = 2, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.DireccionMaxString, MinimumLength = Validaciones.DireccionMinString, ErrorMessage = MsgError.CommonError)]
         public string Direccion { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
@@ -33,11 +33,11 @@ namespace Carrito_C.Models
         public DateTime FechaAlta { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(100, MinimumLength = 2, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.UserNameMaxString, MinimumLength = Validaciones.UserNameMinString, ErrorMessage = MsgError.UserName)]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = MsgError.CommonError)]
-        public string Pasword { get; set; }
+        [StringLength(Validaciones.PasswordMaxString, MinimumLength = Validaciones.PasswordMinString, ErrorMessage = MsgError.Password)]
+        public string Password { get; set; }
     }
 }

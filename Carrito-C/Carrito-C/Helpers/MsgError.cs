@@ -8,5 +8,7 @@
         public const string MsgEmail = "Por favor, ingresar un {0} válido";
         public const string CommonError = "{0} debe estar comprendido entre {2} y {1} caracteres";
         public const string CommonError2 = "{0} debe estar comprendido entre {1} y {2} caracteres";
+        public const string UserName = "El nombre de usuario debe estar comprendido entre {2} y {1} caracteres";
+        public const string Password = "La contraseña debe estar comprendida entre {1} y {2} caracteres";
     }
 }
