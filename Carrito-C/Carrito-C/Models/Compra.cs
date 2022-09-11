@@ -5,8 +5,8 @@
 
         public int Id { get; set; }
 
-        public String cliente { get; set; }
-        public String carrito { get; set; }
-        public int total { get; set; }
+        public Cliente Cliente { get; set; }
+        public Carrito Carrito { get; set; }
+        public int Total { get; set; }
     }
 }
