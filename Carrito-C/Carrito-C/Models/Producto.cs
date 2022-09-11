@@ -22,6 +22,6 @@ namespace Carrito_C.Models
 
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
-        public string Categoria { get; set; }
+        public Categoria Categoria { get; set; }
     }
 }
