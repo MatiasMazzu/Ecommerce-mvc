@@ -8,20 +8,28 @@ namespace Carrito_C.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength (100, MinimumLength = 3, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.NombreMaxString, MinimumLength = Validaciones.NombreMinString, 
+            ErrorMessage = MsgError.CommonError)]
         public string Nombre { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = MsgError.CommonError)]
+        [StringLength(Validaciones.DescripcionMaxString, MinimumLength = Validaciones.DescripcionMinString, 
+            ErrorMessage = MsgError.CommonError)]
         public string Descripcion { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(0, 10000, ErrorMessage = MsgError.CommonError)]
+        [Range(double.MinValue, short.MaxValue, ErrorMessage = MsgError.ValorNegativo)]
+        [DataType(DataType.Currency)]
+        [Display(Name = Alias.PrecioVigente)]
         public int PrecioVigente { get; set; }
 
 
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Display(Name = Alias.CategoriaId)]
+        public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; }
     }
 }

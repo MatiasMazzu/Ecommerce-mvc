@@ -10,6 +10,16 @@ namespace Carrito_C.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Compra>()
+              .HasOne(co => co.Cliente)
+              .WithMany(c => c.Compras)
+              .HasForeignKey(co => co.Id);
+        }
+
         public DbSet<Carrito> Carritos { get; set; }
         public DbSet<CarritoItem> CarritoItems { get; set; }
         public DbSet<Categoria> Categorias { get; set; }
