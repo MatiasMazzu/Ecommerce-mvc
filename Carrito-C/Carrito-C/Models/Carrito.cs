@@ -8,10 +8,10 @@ namespace Carrito_C.Models
     {
         public int Id { get; set; }
 
-        public Carrito(int clientId)
+        public Carrito(int ClienteId)
         {
             this.Activo = true;
-            this.ClienteId = clientId;
+            this.ClienteId = ClienteId;
             this.CarritoItems = new List<CarritoItem>();
         }
 
@@ -19,6 +19,7 @@ namespace Carrito_C.Models
         public bool Activo { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
+        [Key]
         [Display(Name = Alias.ClienteId)]
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
