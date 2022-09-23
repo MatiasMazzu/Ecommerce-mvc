@@ -8,15 +8,23 @@ namespace Carrito_C.Models
     {
         public int Id { get; set; }
 
+        public Carrito(int clientId)
+        {
+            this.Activo = true;
+            this.ClienteId = clientId;
+            this.CarritoItems = new List<CarritoItem>();
+        }
+
         [Required(ErrorMessage = MsgError.Requerido)]
-        public Boolean Activo { get; set; }
+        public bool Activo { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Display(Name = Alias.ClienteId)]
+        public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 
-        public List<Producto> Productos { get; set; }
-
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(1, 199999999, ErrorMessage = MsgError.CommonError2)]
+        [DataType(DataType.Currency)]
         public int Subtotal { get; set; }
     }
 }
