@@ -5,24 +5,28 @@ namespace Carrito_C.Models
 {
     public class CarritoItem
     {
-
         public int Id { get; set; }
 
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Display(Name = Alias.CarritoId)]
+        public int CarritoId { get; set; }
         public Carrito Carrito { get; set; }
 
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Display(Name = Alias.ProductoId)]
+        public Producto ProductoId { get; set; }
         public Producto Producto { get; set; }
 
-
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(1, 199999999, ErrorMessage = MsgError.CommonError2)]
+        [DataType(DataType.Currency)]
         public int ValorUnitario { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(1, 199999999, ErrorMessage = MsgError.CommonError2)]
+        [Range(Validaciones.CantidadMinInt, Validaciones.CantidadMaxInt, ErrorMessage = MsgError.CommonError2)]
         public int Cantidad { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Range(1, 199999999, ErrorMessage = MsgError.CommonError2)]
+        [DataType(DataType.Currency)]
         public int Subtotal { get; set; }
 
     }        

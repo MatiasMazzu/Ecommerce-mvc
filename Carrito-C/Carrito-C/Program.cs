@@ -1,3 +1,6 @@
+using Carrito_C.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Carrito_C
 {
     public class Program
@@ -8,6 +11,8 @@ namespace Carrito_C
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.
+                AddDbContext<CarritoCContext>(options => options.UseInMemoryDatabase("CarritoCDb"));
 
             var app = builder.Build();
 

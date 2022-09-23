@@ -2,6 +2,6 @@
 {
     public class Empleado : Persona
     {
-        public string Legajo { get; set; }
+        public Guid Legajo { set; get; } = Guid.NewGuid();
     }
 }

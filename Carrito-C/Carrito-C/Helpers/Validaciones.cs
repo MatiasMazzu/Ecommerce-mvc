@@ -2,21 +2,24 @@
 {
     public class Validaciones
     {
-        public const int CommonMaxString = 50;
-        public const int CommonMinString = 2;
-        public const int NombreMaxString = CommonMaxString;
-        public const int NombreMinString = CommonMinString;
+        public const int NombreMaxString = 50;
+        public const int NombreMinString = 2;
+        public const int CategoriaMaxString = 50;
+        public const int CategoriaMinString = 2;
+        public const int DniMin = 100000;
+        public const int DniMax = 99999999;
         public const int ApellidoMaxString = 100;
         public const int ApellidoMinString = 2;
-        public const int DireccionMaxString = CommonMaxString;
-        public const int DireccionMinString = CommonMinString; 
-        public const int DescripcionMaxString = CommonMaxString;
-        public const int DescripcionMinString = CommonMinString;
-        public const int TelefonoMaxRange = 99999999;
-        public const int TelefonoMinRange = 100000;
+        public const int DireccionMaxString = 100;
+        public const int DireccionMinString = 5; 
+        public const int DescripcionMaxString = 100;
+        public const int DescripcionMinString = 5;
         public const int UserNameMaxString = 25;
         public const int UserNameMinString = 5;
         public const int PasswordMaxString = 25;
         public const int PasswordMinString = 8;
+        public const int CantidadMaxInt = 100;
+        public const int CantidadMinInt = 0;
+        public const string RegexTelefono = "/^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$/";
     }
 }
