@@ -28,7 +28,6 @@ namespace Carrito_C.Data
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Producto> Productos { get; set; }
-        public DbSet<Stock> Stocks { get; set; }
         public DbSet<StockItem> StockItems { get; set; }
         public DbSet<Sucursal> Sucursales { get; set; }
     }

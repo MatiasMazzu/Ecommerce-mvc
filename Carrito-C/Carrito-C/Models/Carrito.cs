@@ -8,6 +8,8 @@ namespace Carrito_C.Models
     {
         public int Id { get; set; }
 
+        public Carrito() { }
+
         public Carrito(int clientId)
         {
             this.Activo = true;
