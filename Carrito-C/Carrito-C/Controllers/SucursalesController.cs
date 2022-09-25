@@ -10,90 +10,85 @@ using Carrito_C.Models;
 
 namespace Carrito_C.Controllers
 {
-    public class ProductosController : Controller
+    public class SucursalesController : Controller
     {
         private readonly CarritoCContext _context;
 
-        public ProductosController(CarritoCContext context)
+        public SucursalesController(CarritoCContext context)
         {
             _context = context;
         }
 
-        // GET: Productos
+        // GET: Sucursales
         public async Task<IActionResult> Index()
         {
-            var carritoCContext = _context.Productos.Include(p => p.Categoria);
-            return View(await carritoCContext.ToListAsync());
+              return View(await _context.Sucursales.ToListAsync());
         }
 
-        // GET: Productos/Details/5
+        // GET: Sucursales/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Productos == null)
+            if (id == null || _context.Sucursales == null)
             {
                 return NotFound();
             }
 
-            var producto = await _context.Productos
-                .Include(p => p.Categoria)
+            var sucursal = await _context.Sucursales
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (producto == null)
+            if (sucursal == null)
             {
                 return NotFound();
             }
 
-            return View(producto);
+            return View(sucursal);
         }
 
-        // GET: Productos/Create
+        // GET: Sucursales/Create
         public IActionResult Create()
         {
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion");
             return View();
         }
 
-        // POST: Productos/Create
+        // POST: Sucursales/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion,PrecioVigente,Activo,CategoriaId")] Producto producto)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(producto);
+                _context.Add(sucursal);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
-            return View(producto);
+            return View(sucursal);
         }
 
-        // GET: Productos/Edit/5
+        // GET: Sucursales/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Productos == null)
+            if (id == null || _context.Sucursales == null)
             {
                 return NotFound();
             }
 
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto == null)
+            var sucursal = await _context.Sucursales.FindAsync(id);
+            if (sucursal == null)
             {
                 return NotFound();
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
-            return View(producto);
+            return View(sucursal);
         }
 
-        // POST: Productos/Edit/5
+        // POST: Sucursales/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion,PrecioVigente,Activo,CategoriaId")] Producto producto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
-            if (id != producto.Id)
+            if (id != sucursal.Id)
             {
                 return NotFound();
             }
@@ -102,12 +97,12 @@ namespace Carrito_C.Controllers
             {
                 try
                 {
-                    _context.Update(producto);
+                    _context.Update(sucursal);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductoExists(producto.Id))
+                    if (!SucursalExists(sucursal.Id))
                     {
                         return NotFound();
                     }
@@ -118,51 +113,49 @@ namespace Carrito_C.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
-            return View(producto);
+            return View(sucursal);
         }
 
-        // GET: Productos/Delete/5
+        // GET: Sucursales/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Productos == null)
+            if (id == null || _context.Sucursales == null)
             {
                 return NotFound();
             }
 
-            var producto = await _context.Productos
-                .Include(p => p.Categoria)
+            var sucursal = await _context.Sucursales
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (producto == null)
+            if (sucursal == null)
             {
                 return NotFound();
             }
 
-            return View(producto);
+            return View(sucursal);
         }
 
-        // POST: Productos/Delete/5
+        // POST: Sucursales/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Productos == null)
+            if (_context.Sucursales == null)
             {
-                return Problem("Entity set 'CarritoCContext.Productos'  is null.");
+                return Problem("Entity set 'CarritoCContext.Sucursales'  is null.");
             }
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto != null)
+            var sucursal = await _context.Sucursales.FindAsync(id);
+            if (sucursal != null)
             {
-                _context.Productos.Remove(producto);
+                _context.Sucursales.Remove(sucursal);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductoExists(int id)
+        private bool SucursalExists(int id)
         {
-          return _context.Productos.Any(e => e.Id == id);
+          return _context.Sucursales.Any(e => e.Id == id);
         }
     }
 }
