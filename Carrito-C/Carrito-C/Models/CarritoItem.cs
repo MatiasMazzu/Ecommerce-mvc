@@ -25,7 +25,7 @@ namespace Carrito_C.Models
         [Range(Validaciones.CantidadMinInt, Validaciones.CantidadMaxInt, ErrorMessage = MsgError.CommonError2)]
         public int Cantidad { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
+        
         [DataType(DataType.Currency)]
         public int Subtotal { get; set; }
 

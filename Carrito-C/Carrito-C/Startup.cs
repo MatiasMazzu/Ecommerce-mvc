@@ -1,4 +1,7 @@
-﻿namespace Carrito_C
+﻿using Carrito_C.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Carrito_C
 {
     public static class Startup
     {
@@ -14,7 +17,9 @@
         }
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            // Add services to the container.
+            builder.Services.AddDbContext<CarritoCContext>(options => options.UseInMemoryDatabase("CarritoDb"));
+
+
             builder.Services.AddControllersWithViews();
         }
 
