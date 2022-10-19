@@ -21,7 +21,6 @@ namespace Carrito_C.Models
         public bool Activo { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Key]
         [Display(Name = Alias.ClienteId)]
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
