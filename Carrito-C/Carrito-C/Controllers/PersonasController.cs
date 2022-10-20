@@ -20,22 +20,22 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
-        // GET: Clientes
-        public async Task<IActionResult> Index()
+        // GET: Personas
+        public  IActionResult Index()
         {
-            return View(await _context.Personas.ToListAsync());
+              return View(_context.Personas.ToList());
         }
 
         // GET: Personas/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null || _context.Personas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var persona = _context.Personas
+                .FirstOrDefault(p => p.Id == id);
             if (persona == null)
             {
                 return NotFound();
@@ -44,13 +44,13 @@ namespace Carrito_C.Controllers
             return View(persona);
         }
 
-        // GET: Clientes/Create
+        // GET: Personas/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clientes/Create
+        // POST: Personas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -82,7 +82,7 @@ namespace Carrito_C.Controllers
             return View(persona);
         }
 
-        // POST: Clientes/Edit/5
+        // POST: Personas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -142,21 +142,21 @@ namespace Carrito_C.Controllers
         {
             if (_context.Personas == null)
             {
-                return Problem("Entity set 'CarritoCContext.Clientes'  is null.");
+                return Problem("Entity set 'CarritoCContext.Personas'  is null.");
             }
             var persona = await _context.Personas.FindAsync(id);
             if (persona != null)
             {
                 _context.Personas.Remove(persona);
             }
-
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PersonaExists(int id)
         {
-            return _context.Personas.Any(e => e.Id == id);
+          return _context.Personas.Any(e => e.Id == id);
         }
     }
 }
