@@ -20,10 +20,10 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Carritos
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var carritoCContext = _context.Carritos.Include(c => c.Cliente);
-            return View(await carritoCContext.ToListAsync());
+            return View(carritoCContext.ToList());
         }
 
         // GET: Carritos/Details/5
