@@ -27,7 +27,8 @@ namespace Carrito_C.Models
         [DataType(DataType.EmailAddress, ErrorMessage = MsgError.MsgEmail)]
         [Display(Name = Alias.Mail)]
         public string Email {  get; set; }
-        List<StockItem> StockItems { get; set; }
+
+        public List<StockItem> ProductoSucursales { get; set; }
 
     }
 }

@@ -18,6 +18,9 @@ namespace Carrito_C.Data
               .HasOne(co => co.Cliente)
               .WithMany(c => c.Compras)
               .HasForeignKey(co => co.Id);
+
+
+            modelBuilder.Entity<StockItem>().HasKey(ps => new { ps.ProductoId, ps.SucursalId });
         }
 
         public DbSet<Carrito> Carritos { get; set; }
