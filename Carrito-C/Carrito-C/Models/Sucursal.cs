@@ -28,7 +28,7 @@ namespace Carrito_C.Models
         [Display(Name = Alias.Mail)]
         public string Email {  get; set; }
 
-        public List<StockItem> ProductoSucursales { get; set; }
+        public List<StockItem> ProductosSucursal { get; set; }
 
     }
 }

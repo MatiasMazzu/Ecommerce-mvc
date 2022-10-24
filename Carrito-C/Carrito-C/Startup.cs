@@ -17,8 +17,8 @@ namespace Carrito_C
         }
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddDbContext<CarritoCContext>(options => options.UseInMemoryDatabase("CarritoDb"));
-
+            //builder.Services.AddDbContext<CarritoCContext>(options => options.UseInMemoryDatabase("CarritoDb"));
+            builder.Services.AddDbContext<CarritoCContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CarritoDbCS")));
 
             builder.Services.AddControllersWithViews();
         }
