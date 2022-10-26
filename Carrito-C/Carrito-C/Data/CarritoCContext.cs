@@ -24,12 +24,12 @@ namespace Carrito_C.Data
 
             modelBuilder.Entity<StockItem>()
                 .HasOne(ps => ps.Producto)
-                .WithMany(p => p.ProductosSucursal)
+                .WithMany(p => p.ProductoSucursales)
                 .HasForeignKey(ps => ps.ProductoId);
 
             modelBuilder.Entity<StockItem>()
                .HasOne(ps => ps.Sucursal)
-               .WithMany(s => s.ProductoSucursales)
+               .WithMany(s => s.ProductosSucursal)
                .HasForeignKey(ps => ps.SucursalId);
         }
 
