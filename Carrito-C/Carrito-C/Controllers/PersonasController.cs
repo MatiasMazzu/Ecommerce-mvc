@@ -55,26 +55,26 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Persona persona)
+        public IActionResult Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Persona persona)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(persona);
-                await _context.SaveChangesAsync();
+                _context.Personas.Add(persona);
+                _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(persona);
         }
 
         // GET: Personas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null || _context.Personas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Personas.FindAsync(id);
+            var persona = _context.Personas.Find(id);
             if (persona == null)
             {
                 return NotFound();
@@ -98,8 +98,18 @@ namespace Carrito_C.Controllers
             {
                 try
                 {
-                    _context.Update(persona);
-                    await _context.SaveChangesAsync();
+                    var personaEnDB = _context.Personas.Find(persona.Id);
+                    if (personaEnDB != null)
+                    { //Actualizamos
+                        personaEnDB.Nombre = persona.Nombre;
+                        personaEnDB.Apellido = persona.Apellido;
+                        _context.Personas.Update(personaEnDB);
+                        _context.SaveChanges();
+                    }
+                    else {
+                        return NotFound();
+                    }
+                  
                 }
                 catch (DbUpdateConcurrencyException)
                 {
