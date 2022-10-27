@@ -14,7 +14,7 @@ namespace Carrito_C.Models
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [Display(Name = Alias.ProductoId)]
-        public Producto ProductoId { get; set; }
+        public int ProductoId { get; set; }
         public Producto Producto { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]

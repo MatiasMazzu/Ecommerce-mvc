@@ -14,12 +14,6 @@ namespace Carrito_C.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Compra>()
-              .HasOne(co => co.Cliente)
-              .WithMany(c => c.Compras)
-              .HasForeignKey(co => co.Id);
-
-
             modelBuilder.Entity<StockItem>().HasKey(ps => new { ps.ProductoId, ps.SucursalId });
 
             modelBuilder.Entity<StockItem>()

@@ -138,8 +138,7 @@ namespace Carrito_C.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarritoId = table.Column<int>(type: "int", nullable: false),
-                    ProductoIdId = table.Column<int>(type: "int", nullable: false),
-                    ProductoId1 = table.Column<int>(type: "int", nullable: true),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
                     ValorUnitario = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Subtotal = table.Column<int>(type: "int", nullable: false)
@@ -154,13 +153,8 @@ namespace Carrito_C.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CarritoItems_Productos_ProductoId1",
-                        column: x => x.ProductoId1,
-                        principalTable: "Productos",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_CarritoItems_Productos_ProductoIdId",
-                        column: x => x.ProductoIdId,
+                        name: "FK_CarritoItems_Productos_ProductoId",
+                        column: x => x.ProductoId,
                         principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -170,7 +164,8 @@ namespace Carrito_C.Migrations
                 name: "Compras",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(type: "int", nullable: false),
                     CarritoId = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<int>(type: "int", nullable: false),
@@ -186,11 +181,11 @@ namespace Carrito_C.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Compras_Personas_Id",
-                        column: x => x.Id,
+                        name: "FK_Compras_Personas_ClienteId",
+                        column: x => x.ClienteId,
                         principalTable: "Personas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Compras_Sucursales_SucursalId",
                         column: x => x.SucursalId,
@@ -205,14 +200,9 @@ namespace Carrito_C.Migrations
                 column: "CarritoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CarritoItems_ProductoId1",
+                name: "IX_CarritoItems_ProductoId",
                 table: "CarritoItems",
-                column: "ProductoId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CarritoItems_ProductoIdId",
-                table: "CarritoItems",
-                column: "ProductoIdId");
+                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Carritos_ClienteId",
@@ -223,6 +213,11 @@ namespace Carrito_C.Migrations
                 name: "IX_Compras_CarritoId",
                 table: "Compras",
                 column: "CarritoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Compras_ClienteId",
+                table: "Compras",
+                column: "ClienteId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Compras_SucursalId",

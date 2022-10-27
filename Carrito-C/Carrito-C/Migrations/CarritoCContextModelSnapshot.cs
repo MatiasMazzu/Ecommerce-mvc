@@ -60,10 +60,7 @@ namespace Carrito_C.Migrations
                     b.Property<int>("CarritoId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProductoId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductoIdId")
+                    b.Property<int>("ProductoId")
                         .HasColumnType("int");
 
                     b.Property<int>("Subtotal")
@@ -76,9 +73,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("CarritoId");
 
-                    b.HasIndex("ProductoId1");
-
-                    b.HasIndex("ProductoIdId");
+                    b.HasIndex("ProductoId");
 
                     b.ToTable("CarritoItems");
                 });
@@ -109,7 +104,10 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Compra", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("CarritoId")
                         .HasColumnType("int");
@@ -126,6 +124,8 @@ namespace Carrito_C.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CarritoId");
+
+                    b.HasIndex("ClienteId");
 
                     b.HasIndex("SucursalId");
 
@@ -309,19 +309,13 @@ namespace Carrito_C.Migrations
 
                     b.HasOne("Carrito_C.Models.Producto", "Producto")
                         .WithMany()
-                        .HasForeignKey("ProductoId1");
-
-                    b.HasOne("Carrito_C.Models.Producto", "ProductoId")
-                        .WithMany()
-                        .HasForeignKey("ProductoIdId")
+                        .HasForeignKey("ProductoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Carrito");
 
                     b.Navigation("Producto");
-
-                    b.Navigation("ProductoId");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Compra", b =>
@@ -334,7 +328,7 @@ namespace Carrito_C.Migrations
 
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
                         .WithMany("Compras")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -87,7 +87,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Persona persona)
+        public IActionResult Edit(int id, [Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Persona persona)
         {
             if (id != persona.Id)
             {
@@ -128,15 +128,15 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Personas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null || _context.Personas == null)
             {
                 return NotFound();
             }
 
-            var persona = await _context.Personas
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var persona = _context.Personas
+                .FirstOrDefault(m => m.Id == id);
             if (persona == null)
             {
                 return NotFound();
@@ -148,19 +148,19 @@ namespace Carrito_C.Controllers
         // POST: Personas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
             if (_context.Personas == null)
             {
                 return Problem("Entity set 'CarritoCContext.Personas'  is null.");
             }
-            var persona = await _context.Personas.FindAsync(id);
+            var persona =  _context.Personas.Find(id);
             if (persona != null)
             {
                 _context.Personas.Remove(persona);
             }
             
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
