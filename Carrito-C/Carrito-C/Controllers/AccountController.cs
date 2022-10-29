@@ -83,6 +83,11 @@ namespace Carrito_C.Controllers
             var roles = _roleManager.Roles.Tolist();
             return View(roles);
         }
-
+        public IActionResult AccesoDenegado(String returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;  
+            return View();  
+        }
+        
     }
 }
