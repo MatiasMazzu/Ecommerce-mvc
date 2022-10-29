@@ -12,5 +12,6 @@
         public const string Password = CommonError;
         public const string Telefono = "El teléfono ingresado no es válido";
         public const string ValorNegativo = "El valor ingresado {0} debe ser siempre mayor a 0";
+        public const string PassMissMatch = "El campo {0} no coincide";
     }
 }

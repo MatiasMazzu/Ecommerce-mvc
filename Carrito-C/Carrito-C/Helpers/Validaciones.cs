@@ -20,6 +20,6 @@
         public const int PasswordMinString = 8;
         public const int CantidadMaxInt = 100;
         public const int CantidadMinInt = 0;
-        public const string RegexTelefono = "/^(?:(?:00)?549?)?0?(?:11|[2368]\\d)(?:(?=\\d{0,2}15)\\d{2})??\\d{8}$/";
+        public const string RegexTelefono = "^(?!0+$)(\\+\\d{1,3}[- ]?)?(?!0+$)\\d{10,15}$";
     }
 }

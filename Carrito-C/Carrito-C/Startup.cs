@@ -1,4 +1,5 @@
 ﻿using Carrito_C.Data;
+using Carrito_C.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Carrito_C
@@ -20,6 +21,10 @@ namespace Carrito_C
             //builder.Services.AddDbContext<CarritoCContext>(options => options.UseInMemoryDatabase("CarritoDb"));
             builder.Services.AddDbContext<CarritoCContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("CarritoDbCS")));
 
+            #region Identity
+            builder.Services.AddIdentity<Persona, Rol>().AddEntityFrameworkStores<CarritoCContext>();
+            #endregion
+
             builder.Services.AddControllersWithViews();
         }
 
@@ -38,6 +43,7 @@ namespace Carrito_C
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -1,11 +1,12 @@
 ﻿using Carrito_C.Helpers;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Carrito_C.Models
 {
-    public class Persona
+    public class Persona : IdentityUser<int>
     {
-        public int Id { get; set; }
+        //public int Id { get; set; } ya lo hereda de Identity
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [StringLength(Validaciones.NombreMaxString, MinimumLength = Validaciones.NombreMinString, 
@@ -36,7 +37,11 @@ namespace Carrito_C.Models
         [Required(ErrorMessage = MsgError.Requerido)]
         [EmailAddress(ErrorMessage = MsgError.MsgEmail)]
         [Display(Name = Alias.Mail)]
-        public string Email { get; set; }
+        public override string Email
+        {
+            get { return base.Email; }
+            set { base.Email = value; }
+        }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.Date)]
@@ -48,9 +53,7 @@ namespace Carrito_C.Models
         [Display(Name = Alias.UserName)]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(Validaciones.PasswordMaxString, MinimumLength = Validaciones.PasswordMinString, ErrorMessage = MsgError.Password)]
-        [Display(Name = Alias.Password)]
-        public string Password { get; set; }
+       
+       // public string Password { get; set; } hereda de Identity
     }
 }
