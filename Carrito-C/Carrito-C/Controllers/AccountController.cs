@@ -1,24 +1,27 @@
 ﻿using Carrito_C.Models;
 using Carrito_C.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Carrito_C.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<Persona> _usermanager;
         private readonly SignInManager<Persona> _signInManager;
-        public AccountController(UserManager<Persona> usermanager, SignInManager<Persona>signInManager) 
+        public AccountController(UserManager<Persona> usermanager, SignInManager<Persona>signInManager)
+
         {
             this._usermanager = usermanager; 
         }
-
+        [AllowAnonymous]
         public IActionResult Registrar()
         {
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")]RegistroUsuario viewmodel)
                     {
@@ -46,11 +49,12 @@ namespace Carrito_C.Controllers
                 return View(viewmodel);
             
         }
-    
+        [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Login viewmodel) 
         {
@@ -73,8 +77,12 @@ namespace Carrito_C.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-            
-
+        [Authorize(Roles ="Admin")]
+        public async Task<IActionResult> ListaRoles()
+        {
+            var roles = _roleManager.Roles.Tolist();
+            return View(roles);
+        }
 
     }
 }

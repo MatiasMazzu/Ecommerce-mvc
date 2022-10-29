@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Carrito_C.Controllers
 {
+    [Authorize]
     public class ClientesController : Controller
     {
         private readonly CarritoCContext _context;
@@ -44,6 +46,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Clientes/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -52,6 +55,7 @@ namespace Carrito_C.Controllers
         // POST: Clientes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Cliente cliente)
@@ -117,6 +121,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Clientes/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Clientes == null)
@@ -135,6 +140,7 @@ namespace Carrito_C.Controllers
         }
 
         // POST: Clientes/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
