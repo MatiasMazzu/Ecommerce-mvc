@@ -37,7 +37,7 @@ namespace Carrito_C.Controllers
             var stockItem = await _context.StockItems
                 .Include(s => s.Producto)
                 .Include(s => s.Sucursal)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ProductoId == id);
             if (stockItem == null)
             {
                 return NotFound();
@@ -59,7 +59,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductoId,SucursalId,Cantidad")] StockItem stockItem)
+        public async Task<IActionResult> Create([Bind("ProductoId,SucursalId,Cantidad")] StockItem stockItem)
         {
             if (ModelState.IsValid)
             {
@@ -95,9 +95,9 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductoId,SucursalId,Cantidad")] StockItem stockItem)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductoId,SucursalId,Cantidad")] StockItem stockItem)
         {
-            if (id != stockItem.Id)
+            if (id != stockItem.ProductoId)
             {
                 return NotFound();
             }
@@ -111,7 +111,7 @@ namespace Carrito_C.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StockItemExists(stockItem.Id))
+                    if (!StockItemExists(stockItem.ProductoId))
                     {
                         return NotFound();
                     }
@@ -138,7 +138,7 @@ namespace Carrito_C.Controllers
             var stockItem = await _context.StockItems
                 .Include(s => s.Producto)
                 .Include(s => s.Sucursal)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.ProductoId == id);
             if (stockItem == null)
             {
                 return NotFound();
@@ -168,7 +168,7 @@ namespace Carrito_C.Controllers
 
         private bool StockItemExists(int id)
         {
-          return _context.StockItems.Any(e => e.Id == id);
+          return _context.StockItems.Any(e => e.ProductoId == id);
         }
     }
 }
