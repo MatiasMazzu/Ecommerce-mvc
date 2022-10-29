@@ -1,18 +1,17 @@
-﻿@model RegistroUsuario
+﻿@model Login
 
 @{
-    ViewData["Title"] = "Registrar";
+    ViewData["Title"] = "Iniciar sesion";
 
 }
 <h1>@ViewData["Title"]</h1>
 
-<h4>Registración</h4>
 
 <hr />
 
 <div class="row"
     <div class="col-md-4">
-        <form asp-action="Registrar">
+        <form asp-action="IniciarSesion">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
@@ -25,12 +24,12 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
              </div>
              <div class="form-group">
-                <label asp-for="ConfirmacionPassword" class="control-label"></label>
-                <input asp-for="ConfirmacionPassword" class="form-control" />
-                <span asp-validation-for="ConfirmacionPassword" class="text-danger"></span>
+                <label asp-for="Recordarme" class="form-check-label"></label>
+                <input asp-for="Recordarme" class="form-check-control" />
+                <span asp-validation-for="Recordarme" class="text-danger"></span>
              </div>
              <div class="form-group">
-                 <input type="submit" value="Registrar" class="btn btn-primary" />
+                 <input type="submit" value="Login" class="btn btn-primary" />
              </div>
          </form>
      </div>
@@ -38,11 +37,10 @@
 
 @section Scripts{
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial"); 
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+    }
 
 
 
-            
-        
+

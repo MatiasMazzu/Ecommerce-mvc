@@ -46,5 +46,35 @@ namespace Carrito_C.Controllers
                 return View(viewmodel);
             
         }
+    
+        public IActionResult IniciarSesion()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> IniciarSesion(Login viewmodel) 
+        {
+            if (ModelState.IsValid)
+            {
+                var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
+                
+                if (resultado.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
+            }
+                       
+            return View(viewmodel);
+        }
+
+        public async Task<IActionResult> CerrarSesion()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+            
+
+
     }
 }

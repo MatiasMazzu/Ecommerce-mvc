@@ -6,7 +6,7 @@ namespace Carrito_C.Models
 {
     public class Persona : IdentityUser<int>
     {
-        //public int Id { get; set; } ya lo hereda de Identity
+       // public int Id { get; set; } ya lo hereda de Identity
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [StringLength(Validaciones.NombreMaxString, MinimumLength = Validaciones.NombreMinString, 
@@ -54,6 +54,6 @@ namespace Carrito_C.Models
         public string UserName { get; set; }
 
        
-       // public string Password { get; set; } hereda de Identity
+        public string Password { get; set; } //hereda de Identity
     }
 }
