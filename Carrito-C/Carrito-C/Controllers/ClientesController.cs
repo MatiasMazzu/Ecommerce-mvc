@@ -54,7 +54,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,Password")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Cliente cliente)
         {
             if (id != cliente.Id)
             {
