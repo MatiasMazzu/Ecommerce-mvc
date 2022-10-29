@@ -24,7 +24,7 @@ namespace Carrito_C.Models
         public int Dni { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
+        //[RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
         [Display(Name = Alias.Telefono)]
         public int Telefono { get; set; }
 
@@ -60,6 +60,10 @@ namespace Carrito_C.Models
         [Required(ErrorMessage = MsgError.Requerido)]
         [StringLength(Validaciones.PasswordMaxString, MinimumLength = Validaciones.PasswordMinString, ErrorMessage = MsgError.Password)]
         [Display(Name = Alias.Password)]
-        public string Password { get; set; }
+        public override string PasswordHash
+        {
+            get { return base.PasswordHash; }
+            set { base.PasswordHash = value; }
+        }
     }
 }

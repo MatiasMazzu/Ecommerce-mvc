@@ -5,10 +5,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Carrito_C.Migrations
 {
-    public partial class addidentity : Migration
+    public partial class addentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Password",
+                table: "Personas");
+
             migrationBuilder.AlterColumn<string>(
                 name: "UserName",
                 table: "Personas",
@@ -26,16 +30,6 @@ namespace Carrito_C.Migrations
                 nullable: true,
                 oldClrType: typeof(int),
                 oldType: "int");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Password",
-                table: "Personas",
-                type: "nvarchar(25)",
-                maxLength: 25,
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(25)",
-                oldMaxLength: 25);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Nombre",
@@ -432,18 +426,6 @@ namespace Carrito_C.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<string>(
-                name: "Password",
-                table: "Personas",
-                type: "nvarchar(25)",
-                maxLength: 25,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(25)",
-                oldMaxLength: 25,
-                oldNullable: true);
-
-            migrationBuilder.AlterColumn<string>(
                 name: "Nombre",
                 table: "Personas",
                 type: "nvarchar(50)",
@@ -509,6 +491,14 @@ namespace Carrito_C.Migrations
                 oldType: "nvarchar(100)",
                 oldMaxLength: 100,
                 oldNullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Password",
+                table: "Personas",
+                type: "nvarchar(25)",
+                maxLength: 25,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }
