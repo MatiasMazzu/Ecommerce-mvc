@@ -1,4 +1,7 @@
 ﻿@using Carrito_C
 @using Carrito_C.Models
 @using Carrito_C.ViewModels
+@using Microsoft.AspNetCore.Identity
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject SignInManager<Persona> signInManager
