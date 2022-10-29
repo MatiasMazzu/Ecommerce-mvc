@@ -24,7 +24,7 @@ namespace Carrito_C.Models
         public int Dni { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        //[RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
+        [RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
         [Display(Name = Alias.Telefono)]
         public int Telefono { get; set; }
 
