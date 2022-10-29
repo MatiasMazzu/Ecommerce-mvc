@@ -70,6 +70,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Clientes/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Clientes == null)
