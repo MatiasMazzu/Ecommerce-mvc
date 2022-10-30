@@ -1,25 +1,34 @@
-﻿using Carrito_C.Models;
+﻿using Carrito_C.Data;
+using Carrito_C.Models;
 using Carrito_C.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Claims;
 
 namespace Carrito_C.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         private readonly UserManager<Persona> _usermanager;
         private readonly SignInManager<Persona> _signInManager;
-        public AccountController(UserManager<Persona> usermanager, SignInManager<Persona>signInManager) 
+        private readonly RoleManager<Rol> _rolManager;
+        private readonly CarritoCContext _contexto;
+        public AccountController(UserManager<Persona> usermanager,
+            SignInManager<Persona> _signInManager, RoleManager<Rol> _rolManager, CarritoCContext contexto)
+
         {
             this._usermanager = usermanager; 
             this._signInManager = signInManager;
         }
-
+        [AllowAnonymous]
         public IActionResult Registrar()
         {
             return View();
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")]RegistroUsuario viewmodel)
                     {
@@ -35,7 +44,7 @@ namespace Carrito_C.Controllers
 
                 if (resultadoCreate.Succeeded)
                 {
-                   await _signInManager.SignInAsync(clienteACrear,isPersistent: false );
+                    await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in resultadoCreate.Errors)
@@ -44,28 +53,29 @@ namespace Carrito_C.Controllers
                 }
 
             }
-                return View(viewmodel);
-            
+            return View(viewmodel);
+
         }
-    
+        [AllowAnonymous]
         public IActionResult IniciarSesion()
         {
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> IniciarSesion(Login viewmodel) 
+        public async Task<IActionResult> IniciarSesion(Login viewmodel)
         {
             if (ModelState.IsValid)
             {
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
-                
+
                 if (resultado.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
             }
-                       
+
             return View(viewmodel);
         }
 
@@ -74,8 +84,34 @@ namespace Carrito_C.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-            
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ListaRoles()
+        {
+            var roles = _rolManager.Roles.ToList();
+            return View(roles);
+        }
+        public IActionResult AccesoDenegado(String returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+        public IActionResult TestCurrentUser()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                string nombreUsuario = User.Identity.Name;
+                //voy al contexto de base de datos
+                Persona persona = _contexto.Personas.FirstOrDefault(persona => persona.NormalizedUserName == nombreUsuario.ToUpper());
+                // Otra opcion es buscar por ID y no Por el objeto "persona", voy al contexto de base de datos
+                int personaId = Int32.Parse(_usermanager.GetUserId(User));
+                // Por Claims devuelve un string con los claims
+                int personaId2 = Int32.Parse (User.FindFirstValue(ClaimTypes.NameIdentifier));
+                //Hace lo mismo que personaId2 sale el claim completo
+                var personaId3 = User.Claims.FirstOrDefault(c => c.Type 
+                == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            }
+            return null;
 
-
+        }
     }
 }
