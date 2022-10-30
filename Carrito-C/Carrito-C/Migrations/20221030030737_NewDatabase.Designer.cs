@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221029162156_add-entity")]
-    partial class addentity
+    [Migration("20221030030737_NewDatabase")]
+    partial class NewDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -470,6 +470,9 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
                     b.HasBaseType("Carrito_C.Models.Persona");
+
+                    b.Property<long>("CUIT")
+                        .HasColumnType("bigint");
 
                     b.HasDiscriminator().HasValue("Cliente");
                 });
