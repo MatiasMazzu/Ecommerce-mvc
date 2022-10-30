@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Microsoft.AspNetCore.Identity;
+using Carrito_C.Helpers;
 
 namespace Carrito_C.Controllers
 {
     public class PersonasController : Controller
     {
         private readonly CarritoCContext _context;
+        private readonly UserManager<Persona> _userManager;
 
-        public PersonasController(CarritoCContext context)
+        public PersonasController(CarritoCContext context,UserManager<Persona>userManager)
         {
             _context = context;
+            this._userManager = userManager;
         }
 
         // GET: Personas
@@ -55,13 +59,49 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Persona persona)
+        public async Task <IActionResult> Create(bool EsAdmin,[Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Persona persona)
         {
             if (ModelState.IsValid)
             {
-                _context.Personas.Add(persona);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                //_context.Personas.Add(persona);
+                //_context.SaveChanges();
+
+                persona.UserName = persona.Email;
+
+                var resultadoNewPersona = await _userManager.CreateAsync(persona, Configs.PasswordGenerica);
+                if (resultadoNewPersona.Succeeded)
+                {
+                    IdentityResult resultadoAddRole;
+                    String rolDefinido;
+
+                    if (EsAdmin)
+                    {
+                        rolDefinido = Configs.AdminRolName;
+
+                    }
+                    else
+                    {
+                        rolDefinido = Configs.UsuarioRolName;
+                         
+                    }
+                    resultadoAddRole = await _userManager.AddToRoleAsync(persona, rolDefinido);
+
+                    if (resultadoAddRole.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Personas");
+                    }
+                    else
+                    {
+                        return Content($"no se a podido agregar el rol{rolDefinido }");
+                    }
+                }
+                foreach(var error in resultadoNewPersona.Errors)
+                {
+                    ModelState.AddModelError(String.Empty, error.Description);
+                }
+
+
+                
             }
             return View(persona);
         }
