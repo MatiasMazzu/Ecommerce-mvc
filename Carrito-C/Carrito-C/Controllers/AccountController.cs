@@ -12,6 +12,7 @@ namespace Carrito_C.Controllers
         public AccountController(UserManager<Persona> usermanager, SignInManager<Persona>signInManager) 
         {
             this._usermanager = usermanager; 
+            this._signInManager = signInManager;
         }
 
         public IActionResult Registrar()
@@ -22,7 +23,7 @@ namespace Carrito_C.Controllers
         [HttpPost]
         public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")]RegistroUsuario viewmodel)
                     {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 Cliente clienteACrear = new Cliente()
                 {
