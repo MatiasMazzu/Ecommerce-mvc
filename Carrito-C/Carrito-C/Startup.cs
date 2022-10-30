@@ -1,5 +1,6 @@
 ﻿using Carrito_C.Data;
 using Carrito_C.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 namespace Carrito_C
@@ -24,6 +25,15 @@ namespace Carrito_C
             #region Identity
             builder.Services.AddIdentity<Persona, Rol>().AddEntityFrameworkStores<CarritoCContext>();
             #endregion
+
+            builder.Services.PostConfigure<CookieAuthenticationOptions>(Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme,
+                opciones =>
+                {
+                    opciones.LoginPath = "/Account/IniciarSesion";
+                    opciones.AccessDeniedPath = "/Account/AccesoDenegado";
+                    opciones.Cookie.Name = "IdentidadCarritoApp";
+                }
+                );
 
             builder.Services.AddControllersWithViews();
         }

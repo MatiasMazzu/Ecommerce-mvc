@@ -13,8 +13,9 @@ namespace Carrito_C.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(String mensaje)
         {
+            ViewBag.Mensaje = mensaje;
             return View();
         }
 
