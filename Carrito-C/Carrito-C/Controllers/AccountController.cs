@@ -17,11 +17,13 @@ namespace Carrito_C.Controllers
         private readonly RoleManager<Rol> _rolManager;
         private readonly CarritoCContext _contexto;
         public AccountController(UserManager<Persona> usermanager,
-            SignInManager<Persona> signInManager, RoleManager<Rol> _rolManager, CarritoCContext contexto)
+            SignInManager<Persona> signInManager, RoleManager<Rol> rolManager, CarritoCContext contexto)
 
         {
             this._usermanager = usermanager; 
             this._signInManager = signInManager;
+            this._rolManager = rolManager;
+            this._contexto = contexto;
         }
         [AllowAnonymous]
         public IActionResult Registrar()
