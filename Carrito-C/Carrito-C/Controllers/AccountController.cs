@@ -1,4 +1,4 @@
-﻿using Carrito_C.Data;
+using Carrito_C.Data;
 using Carrito_C.Models;
 using Carrito_C.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -16,9 +16,9 @@ namespace Carrito_C.Controllers
         private readonly SignInManager<Persona> _signInManager;
         private readonly RoleManager<Rol> _rolManager;
         private readonly CarritoCContext _contexto;
+               
         public AccountController(UserManager<Persona> usermanager,
             SignInManager<Persona> signInManager, RoleManager<Rol> rolManager, CarritoCContext contexto)
-
         {
             this._usermanager = usermanager; 
             this._signInManager = signInManager;
@@ -33,7 +33,7 @@ namespace Carrito_C.Controllers
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")]RegistroUsuario viewmodel)
-                    {
+        {
             if (ModelState.IsValid)
             {
                 Cliente clienteACrear = new Cliente()
@@ -43,20 +43,34 @@ namespace Carrito_C.Controllers
                 };
 
                 var resultadoCreate = await _usermanager.CreateAsync(clienteACrear, viewmodel.Password);
-
                 if (resultadoCreate.Succeeded)
                 {
-                    await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    var resultadoAddRole = await _usermanager.AddToRoleAsync(clienteACrear, Configs.ClienteRolName);
+                    if (resultadoCreate.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                    }
                 }
                 foreach (var error in resultadoCreate.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
             }
-            return View(viewmodel);
-
+            return View(viewmodel);          
+        }
+        
+        private static Cliente GetClienteACrear(RegistroUsuario viewmodel)
+        {
+            return new Cliente()
+            {
+                Email = viewmodel.Email,
+                UserName = viewmodel.Email
+            };
         }
         [AllowAnonymous]
         public IActionResult IniciarSesion()
@@ -70,14 +84,13 @@ namespace Carrito_C.Controllers
             if (ModelState.IsValid)
             {
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
-
                 if (resultado.Succeeded)
                 {
+                    await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
             }
-
             return View(viewmodel);
         }
 
