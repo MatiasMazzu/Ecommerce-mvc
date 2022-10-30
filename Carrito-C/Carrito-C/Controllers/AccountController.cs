@@ -1,10 +1,10 @@
 using Carrito_C.Data;
+using Carrito_C.Helpers;
 using Carrito_C.Models;
 using Carrito_C.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Security.Claims;
 
 namespace Carrito_C.Controllers
@@ -83,6 +83,11 @@ namespace Carrito_C.Controllers
         {
             if (ModelState.IsValid)
             {
+                Cliente clienteACrear = new Cliente()
+                {
+                    Email = viewmodel.Email,
+                    UserName = viewmodel.Email
+                };
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
                 if (resultado.Succeeded)
                 {
