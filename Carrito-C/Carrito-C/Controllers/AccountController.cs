@@ -83,15 +83,10 @@ namespace Carrito_C.Controllers
         {
             if (ModelState.IsValid)
             {
-                Cliente clienteACrear = new Cliente()
-                {
-                    Email = viewmodel.Email,
-                    UserName = viewmodel.Email
-                };
+
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
                 if (resultado.Succeeded)
                 {
-                    await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
