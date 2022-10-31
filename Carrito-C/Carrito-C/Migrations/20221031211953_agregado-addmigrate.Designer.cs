@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221030030737_NewDatabase")]
-    partial class NewDatabase
+    [Migration("20221031211953_agregado-addmigrate")]
+    partial class agregadoaddmigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
