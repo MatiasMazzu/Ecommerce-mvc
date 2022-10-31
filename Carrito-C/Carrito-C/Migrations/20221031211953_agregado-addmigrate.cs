@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Carrito_C.Migrations
 {
-    public partial class NewDatabase : Migration
+    public partial class agregadoaddmigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
