@@ -7,6 +7,7 @@
         public const string Password = "Contraseña";
         public const string Telefono = "Teléfono";
         public const string Direccion = "Dirección";
+        public const string Numeracion = "Numeración";
         public const string UserName = "Usuario";
         public const string ClienteId = "Cliente";
         public const string CarritoId = "Carrito";
