@@ -76,7 +76,7 @@ namespace Carrito_C.Controllers
 
                     if (resultadoAddRole.Succeeded)
                     {
-                        return RedirectToAction("Index", "Personas");
+                        return RedirectToAction("Index", "Empleados");
                     }
                     else
                     {
