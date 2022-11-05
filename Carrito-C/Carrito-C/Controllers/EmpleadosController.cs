@@ -9,21 +9,22 @@ using Carrito_C.Data;
 using Carrito_C.Models;
 using Carrito_C.Helpers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Carrito_C.Controllers
 {
     public class EmpleadosController : Controller
     {
         private readonly CarritoCContext _context;
-        private readonly UserManager<Empleado> _userManager;
 
-        public EmpleadosController(CarritoCContext context, UserManager<Empleado> userManager)
+        public EmpleadosController(CarritoCContext context)
         {
             _context = context;
-            this._userManager = userManager;
         }
 
         // GET: Empleados
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public async Task<IActionResult> Index()
         {
               return View(await _context.Empleados.ToListAsync());
@@ -48,6 +49,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public IActionResult Create()
         {
             return View();
@@ -57,44 +59,21 @@ namespace Carrito_C.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Legajo,Nombre,Apellido,Dni,Email,FechaAlta,UserName,PasswordHash,Id,NormalizedUserName,NormalizedEmail,EmailConfirmed,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Empleado empleado)
         {
             if (ModelState.IsValid)
             {
-                //_context.Personas.Add(persona);
-                //_context.SaveChanges();
-
-                var resultadoNewEmpleado = await _userManager.CreateAsync(empleado, Configs.PasswordGenerica);
-                if (resultadoNewEmpleado.Succeeded)
-                {
-                    IdentityResult resultadoAddRole;
-                    String rolDefinido;
-                    rolDefinido = Configs.EmpleadoRolName;
-
-                    resultadoAddRole = await _userManager.AddToRoleAsync(empleado, rolDefinido);
-
-                    if (resultadoAddRole.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Empleados");
-                    }
-                    else
-                    {
-                        return Content($"no se a podido agregar el rol{rolDefinido}");
-                    }
-                }
-                foreach (var error in resultadoNewEmpleado.Errors)
-                {
-                    ModelState.AddModelError(String.Empty, error.Description);
-                }
-
-
-
+                _context.Add(empleado);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             return View(empleado);
         }
 
         // GET: Empleados/Edit/5
+        [Authorize(Roles = Configs.AdminRolName)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -114,6 +93,7 @@ namespace Carrito_C.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Configs.AdminRolName)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Legajo,Nombre,Apellido,Dni,Email,FechaAlta,UserName,PasswordHash,Id,NormalizedUserName,NormalizedEmail,EmailConfirmed,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Empleado empleado)
         {
@@ -146,6 +126,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Empleados/Delete/5
+        [Authorize(Roles = Configs.AdminRolName)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Empleados == null)
@@ -165,6 +146,7 @@ namespace Carrito_C.Controllers
 
         // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = Configs.AdminRolName)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

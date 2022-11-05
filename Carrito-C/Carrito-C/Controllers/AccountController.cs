@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace Carrito_C.Controllers
 {
@@ -25,6 +26,78 @@ namespace Carrito_C.Controllers
             this._rolManager = rolManager;
             this._contexto = contexto;
         }
+        [Authorize(Roles = Configs.AdminRolName+","+Configs.EmpleadoRolName)]
+        public IActionResult RegistrarEmpleado()
+        {
+            return View();
+        }
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        [HttpPost]
+        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido")] RegistroEmpleado viewmodel)
+        {
+            if (ModelState.IsValid)
+            {
+                Empleado empleadoACrear = new Empleado()
+                {
+                    Nombre = viewmodel.Nombre,
+                    Apellido = viewmodel.Apellido,
+                    UserName = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty),
+                    Email = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty)
+                };
+                var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, Configs.PasswordGenerica);
+                if (resultadoCreate.Succeeded)
+                {
+                    var resultadoAddRole = await _usermanager.AddToRoleAsync(empleadoACrear, Configs.EmpleadoRolName);
+                    if (resultadoCreate.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(empleadoACrear, isPersistent: false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                    }
+                }
+                foreach (var error in resultadoCreate.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return View(viewmodel);
+
+        }
+     
+        private static Cliente GetClienteACrear(RegistroUsuario viewmodel)
+        {
+            return new Cliente()
+            {
+                Email = viewmodel.Email,
+                UserName = viewmodel.Email
+            };
+        }
+        private async Task<IActionResult> RegistrarRole(Persona user, string rolName, string password)
+        {
+            var resultadoCreate = await _usermanager.CreateAsync(user, password);
+            if (resultadoCreate.Succeeded)
+            {
+                var resultadoAddRole = await _usermanager.AddToRoleAsync(user, password);
+                if (resultadoCreate.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {rolName}");
+                }
+            }
+            foreach (var error in resultadoCreate.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            return View(user);
+        }
+
         [AllowAnonymous]
         public IActionResult Registrar()
         {
@@ -32,7 +105,7 @@ namespace Carrito_C.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")]RegistroUsuario viewmodel)
+        public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")] RegistroUsuario viewmodel)
         {
             if (ModelState.IsValid)
             {
@@ -61,16 +134,7 @@ namespace Carrito_C.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return View(viewmodel);          
-        }
-        
-        private static Cliente GetClienteACrear(RegistroUsuario viewmodel)
-        {
-            return new Cliente()
-            {
-                Email = viewmodel.Email,
-                UserName = viewmodel.Email
-            };
+            return View(viewmodel);
         }
         [AllowAnonymous]
         public IActionResult IniciarSesion()
@@ -99,12 +163,8 @@ namespace Carrito_C.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ListaRoles()
-        {
-            var roles = _rolManager.Roles.ToList();
-            return View(roles);
-        }
+
+
         public IActionResult AccesoDenegado(String returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;

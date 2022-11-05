@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Carrito_C.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Carrito_C.Controllers
 {
@@ -44,6 +47,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Sucursales/Create
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public IActionResult Create()
         {
             return View();
@@ -53,6 +57,7 @@ namespace Carrito_C.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
@@ -66,6 +71,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Sucursales/Edit/5
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Sucursales == null)
@@ -85,6 +91,7 @@ namespace Carrito_C.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
@@ -117,6 +124,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Sucursales/Delete/5
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Sucursales == null)
@@ -135,6 +143,7 @@ namespace Carrito_C.Controllers
         }
 
         // POST: Sucursales/Delete/5
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
