@@ -30,7 +30,7 @@ namespace Carrito_C.Controllers
             CrearSucursales().Wait();
             CrearCategorias().Wait();
             CrearProductos().Wait();
-            //CrearStockItem().Wait();
+            CrearStockItem().Wait();
 
             return RedirectToAction("Index", "Home", new { mensaje = "Proceso Seed finalizado" });
         }
@@ -66,8 +66,10 @@ namespace Carrito_C.Controllers
             StockItem producto = new StockItem()
             {
                 Producto = _context.Productos.First(),
+                ProductoId = _context.Productos.First().Id,
                 Cantidad = 100,
-                Sucursal = _context.Sucursales.First()
+                Sucursal = _context.Sucursales.First(),
+                SucursalId = _context.Sucursales.First().Id
 
             };
             _context.Update(producto);
