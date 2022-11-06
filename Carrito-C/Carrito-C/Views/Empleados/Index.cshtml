@@ -1,59 +1,72 @@
-﻿@using Carrito_C.Helpers
-@model IEnumerable<Carrito_C.Models.Sucursal>
+﻿@model IEnumerable<Carrito_C.Models.Empleado>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
-@if (User.IsInRole(Configs.AdminRolName) || User.IsInRole(Configs.EmpleadoRolName))
-{
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-}
-
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Legajo)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Direccion)
+                @Html.DisplayNameFor(model => model.Apellido)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Telefono)
+                @Html.DisplayNameFor(model => model.Dni)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAlta)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PasswordHash)
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Legajo)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Direccion)
+                @Html.DisplayFor(modelItem => item.Apellido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Telefono)
+                @Html.DisplayFor(modelItem => item.Dni)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-                @if (User.IsInRole(Configs.AdminRolName) || User.IsInRole(Configs.EmpleadoRolName))
-                {
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaAlta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
-                }
         </tr>
 }
     </tbody>

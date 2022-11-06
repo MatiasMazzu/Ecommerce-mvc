@@ -1,9 +1,13 @@
-﻿namespace Carrito_C.Models
+﻿using Microsoft.Build.Framework;
+
+namespace Carrito_C.Models
 {
     public class Cliente : Persona
     {
         public long CUIT { get; set; } 
         public List<Compra> Compras { get; set; }
-        public List<Carrito> Carritos { get; set; }
+
+        [Required]
+        public Carrito Carrito { get; set; }
     }
 }

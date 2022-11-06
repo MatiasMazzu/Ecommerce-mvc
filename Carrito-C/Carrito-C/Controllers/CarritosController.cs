@@ -20,10 +20,10 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Carritos
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var carritoCContext = _context.Carritos.Include(c => c.Cliente);
-            return View(carritoCContext.ToList());
+            return View(await carritoCContext.ToListAsync());
         }
 
         // GET: Carritos/Details/5
@@ -48,7 +48,7 @@ namespace Carrito_C.Controllers
         // GET: Carritos/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Apellido");
+            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Discriminator");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Activo,ClienteId,Subtotal")] Carrito carrito)
+        public async Task<IActionResult> Create([Bind("Id,Activo,Subtotal")] Carrito carrito)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace Carrito_C.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Apellido", carrito.ClienteId);
+            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Discriminator", carrito.Id);
             return View(carrito);
         }
 
@@ -82,7 +82,7 @@ namespace Carrito_C.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Apellido", carrito.ClienteId);
+            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Discriminator", carrito.Id);
             return View(carrito);
         }
 
@@ -91,7 +91,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Activo,ClienteId,Subtotal")] Carrito carrito)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Activo,Subtotal")] Carrito carrito)
         {
             if (id != carrito.Id)
             {
@@ -118,7 +118,7 @@ namespace Carrito_C.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "Apellido", carrito.ClienteId);
+            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Discriminator", carrito.Id);
             return View(carrito);
         }
 

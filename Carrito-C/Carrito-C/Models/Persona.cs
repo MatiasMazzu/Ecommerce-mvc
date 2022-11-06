@@ -15,7 +15,7 @@ namespace Carrito_C.Models
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [StringLength(Validaciones.ApellidoMaxString, MinimumLength = Validaciones.ApellidoMinString,
-            ErrorMessage = MsgError.CommonError)]
+        ErrorMessage = MsgError.CommonError)]
         public string Apellido { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
@@ -23,16 +23,9 @@ namespace Carrito_C.Models
         [Display(Name = Alias.Dni)]
         public int Dni { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
-        [Display(Name = Alias.Telefono)]
-        public int Telefono { get; set; }
+        public Telefono Telefono{ get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(Validaciones.DireccionMaxString, MinimumLength = Validaciones.DireccionMinString,
-            ErrorMessage = MsgError.CommonError)]
-        [Display(Name = Alias.Direccion)]
-        public string Direccion { get; set; }
+        public Direccion Direccion { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [EmailAddress(ErrorMessage = MsgError.MsgEmail)]
@@ -46,7 +39,7 @@ namespace Carrito_C.Models
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.Date)]
         [Display(Name = Alias.FechaAlta)]
-        public DateTime FechaAlta { get; set; }
+        public DateTime FechaAlta { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [StringLength(Validaciones.UserNameMaxString, MinimumLength = Validaciones.UserNameMinString, ErrorMessage = MsgError.UserName)]

@@ -59,8 +59,7 @@ namespace Carrito_C.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult> Create(bool EsAdmin,[Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Persona persona)
-        {
+        public async Task <IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Persona persona){
             if (ModelState.IsValid)
             {
                 //_context.Personas.Add(persona);
@@ -74,16 +73,8 @@ namespace Carrito_C.Controllers
                     IdentityResult resultadoAddRole;
                     String rolDefinido;
 
-                    if (EsAdmin)
-                    {
-                        rolDefinido = Configs.AdminRolName;
+                        rolDefinido = Configs.ClienteRolName;
 
-                    }
-                    else
-                    {
-                        rolDefinido = Configs.UsuarioRolName;
-                         
-                    }
                     resultadoAddRole = await _userManager.AddToRoleAsync(persona, rolDefinido);
 
                     if (resultadoAddRole.Succeeded)

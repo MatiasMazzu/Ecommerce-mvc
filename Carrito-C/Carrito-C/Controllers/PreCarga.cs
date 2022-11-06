@@ -1,4 +1,5 @@
 ﻿using Carrito_C.Data;
+using Carrito_C.Helpers;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace Carrito_C.Controllers
         private readonly RoleManager<Rol> _roleManager;
         private readonly CarritoCContext _context;
 
-        private List<String> roles = new List<String>() { "Admin", "Cliente", "Empleado", "usuario" };
+        private List<String> roles = new List<String>() { Configs.AdminRolName, Configs.ClienteRolName, Configs.EmpleadoRolName};
         public PreCarga(UserManager<Persona> userManager ,RoleManager<Rol> roleManager, CarritoCContext context)
         {
             this._userManager = userManager;
@@ -43,7 +44,21 @@ namespace Carrito_C.Controllers
 
         private async Task CrearAdmin()
         {
-            
+            Persona admin = new Persona() { 
+                Nombre = "Admin",
+                Apellido = "Admin",
+                Dni = 11111111,
+                UserName = "admin@ort.edu.ar",
+                Email = "admin@ort.edu.ar"                 
+            };
+
+            var resultadoAddAdmin = await _userManager.CreateAsync(admin,"Password1!");
+
+            if (resultadoAddAdmin.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(admin,"Admin");
+            }
+
         }
 
         private async Task CrearRoles()

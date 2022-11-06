@@ -12,16 +12,9 @@ namespace Carrito_C.Models
             ErrorMessage = MsgError.CommonError)]
         public string Nombre { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [StringLength(Validaciones.DireccionMaxString, MinimumLength = Validaciones.DireccionMinString,
-            ErrorMessage = MsgError.CommonError)]
-        [Display(Name = Alias.Direccion)]
         public string Direccion { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [Display(Name = Alias.Telefono)]
-        [RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
-        public int Telefono { get; set; }
+        public Telefono Telefono { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.EmailAddress, ErrorMessage = MsgError.MsgEmail)]

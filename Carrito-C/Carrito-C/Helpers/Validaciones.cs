@@ -8,6 +8,8 @@
         public const int CategoriaMinString = 2;
         public const int DniMin = 100000;
         public const int DniMax = 99999999;
+        public const int NumeracionMin = 1;
+        public const int NumeracionMax = 25000;
         public const int ApellidoMaxString = 100;
         public const int ApellidoMinString = 2;
         public const int DireccionMaxString = 100;
