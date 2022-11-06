@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221031211953_agregado-addmigrate")]
-    partial class agregadoaddmigrate
+    [Migration("20221106003430_unSoloCarrito")]
+    partial class unSoloCarrito
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,23 +27,15 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
 
                     b.ToTable("Carritos");
                 });
@@ -134,6 +126,24 @@ namespace Carrito_C.Migrations
                     b.ToTable("Compras");
                 });
 
+            modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Calle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Direccion");
+                });
+
             modelBuilder.Entity("Carrito_C.Models.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -195,9 +205,7 @@ namespace Carrito_C.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -208,12 +216,27 @@ namespace Carrito_C.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("Telefono")
+                    b.Property<int?>("TelefonoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TelefonoId");
+
                     b.ToTable("Sucursales");
+                });
+
+            modelBuilder.Entity("Carrito_C.Models.Telefono", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Telefono");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -438,11 +461,6 @@ namespace Carrito_C.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<int>("Dni")
                         .HasColumnType("int");
 
@@ -453,9 +471,6 @@ namespace Carrito_C.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("Telefono")
-                        .HasColumnType("int");
 
                     b.HasDiscriminator().HasValue("Persona");
                 });
@@ -481,8 +496,18 @@ namespace Carrito_C.Migrations
                 {
                     b.HasBaseType("Carrito_C.Models.Persona");
 
+                    b.Property<int?>("DireccionId")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("Legajo")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("TelefonoId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("DireccionId");
+
+                    b.HasIndex("TelefonoId");
 
                     b.HasDiscriminator().HasValue("Empleado");
                 });
@@ -490,8 +515,8 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
-                        .WithMany("Carritos")
-                        .HasForeignKey("ClienteId")
+                        .WithOne("Carrito")
+                        .HasForeignKey("Carrito_C.Models.Carrito", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -544,6 +569,17 @@ namespace Carrito_C.Migrations
                     b.Navigation("Sucursal");
                 });
 
+            modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
+                {
+                    b.HasOne("Carrito_C.Models.Cliente", "Cliente")
+                        .WithOne("Direccion")
+                        .HasForeignKey("Carrito_C.Models.Direccion", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+                });
+
             modelBuilder.Entity("Carrito_C.Models.Producto", b =>
                 {
                     b.HasOne("Carrito_C.Models.Categoria", "Categoria")
@@ -572,6 +608,26 @@ namespace Carrito_C.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Sucursal");
+                });
+
+            modelBuilder.Entity("Carrito_C.Models.Sucursal", b =>
+                {
+                    b.HasOne("Carrito_C.Models.Telefono", "Telefono")
+                        .WithMany()
+                        .HasForeignKey("TelefonoId");
+
+                    b.Navigation("Telefono");
+                });
+
+            modelBuilder.Entity("Carrito_C.Models.Telefono", b =>
+                {
+                    b.HasOne("Carrito_C.Models.Cliente", "Cliente")
+                        .WithOne("Telefono")
+                        .HasForeignKey("Carrito_C.Models.Telefono", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -625,6 +681,21 @@ namespace Carrito_C.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Carrito_C.Models.Empleado", b =>
+                {
+                    b.HasOne("Carrito_C.Models.Direccion", "Direccion")
+                        .WithMany()
+                        .HasForeignKey("DireccionId");
+
+                    b.HasOne("Carrito_C.Models.Telefono", "Telefono")
+                        .WithMany()
+                        .HasForeignKey("TelefonoId");
+
+                    b.Navigation("Direccion");
+
+                    b.Navigation("Telefono");
+                });
+
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Navigation("CarritoItems");
@@ -647,9 +718,13 @@ namespace Carrito_C.Migrations
 
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
-                    b.Navigation("Carritos");
+                    b.Navigation("Carrito");
 
                     b.Navigation("Compras");
+
+                    b.Navigation("Direccion");
+
+                    b.Navigation("Telefono");
                 });
 #pragma warning restore 612, 618
         }

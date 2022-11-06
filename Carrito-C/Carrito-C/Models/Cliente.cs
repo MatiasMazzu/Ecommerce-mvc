@@ -4,6 +4,6 @@
     {
         public long CUIT { get; set; } 
         public List<Compra> Compras { get; set; }
-        public List<Carrito> Carritos { get; set; }
+        public Carrito Carrito { get; set; }
     }
 }

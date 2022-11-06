@@ -1,28 +1,25 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Carrito_C.Helpers;
 
 namespace Carrito_C.Models
 {
     public class Carrito
     {
-        public int Id { get; set; }
 
-        public Carrito() { }
-
-        public Carrito(int ClienteId)
+        public Carrito()
         {
             this.Activo = true;
-            this.ClienteId = ClienteId;
-            this.CarritoItems = new List<CarritoItem>();
         }
+        [Required]
+        [Key, ForeignKey("Cliente")]
+        public int Id { get; set; }
+
 
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [Display(Name = Alias.ClienteId)]
-        public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 

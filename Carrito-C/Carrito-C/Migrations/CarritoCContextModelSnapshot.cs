@@ -25,23 +25,15 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
-
-                    b.Property<int>("ClienteId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClienteId");
 
                     b.ToTable("Carritos");
                 });
@@ -521,8 +513,8 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
-                        .WithMany("Carritos")
-                        .HasForeignKey("ClienteId")
+                        .WithOne("Carrito")
+                        .HasForeignKey("Carrito_C.Models.Carrito", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -724,7 +716,7 @@ namespace Carrito_C.Migrations
 
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
-                    b.Navigation("Carritos");
+                    b.Navigation("Carrito");
 
                     b.Navigation("Compras");
 

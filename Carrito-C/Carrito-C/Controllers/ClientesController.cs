@@ -26,7 +26,11 @@ namespace Carrito_C.Controllers
         {
               return View(await _context.Clientes.ToListAsync());
         }
+        public async Task<IActionResult> AgregarAlCarrito()
+        {
 
+            return View(await _context.Clientes.ToListAsync());
+        }
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
