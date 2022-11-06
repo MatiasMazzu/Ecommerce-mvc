@@ -35,7 +35,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Carritos");
+                    b.ToTable("Carritos", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.CarritoItem", b =>
@@ -67,7 +67,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.ToTable("CarritoItems");
+                    b.ToTable("CarritoItems", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Categoria", b =>
@@ -90,7 +90,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categorias");
+                    b.ToTable("Categorias", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Compra", b =>
@@ -121,7 +121,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("Compras");
+                    b.ToTable("Compras", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
@@ -139,7 +139,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Direccion");
+                    b.ToTable("Direccion", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Producto", b =>
@@ -173,7 +173,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.StockItem", b =>
@@ -191,7 +191,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("StockItems");
+                    b.ToTable("StockItems", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Sucursal", b =>
@@ -221,7 +221,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("TelefonoId");
 
-                    b.ToTable("Sucursales");
+                    b.ToTable("Sucursales", (string)null);
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Telefono", b =>
@@ -234,7 +234,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Telefono");
+                    b.ToTable("Telefono", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>

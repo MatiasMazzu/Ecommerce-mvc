@@ -8,11 +8,6 @@ namespace Carrito_C.Models
     public class Carrito
     {
 
-        public Carrito()
-        {
-            this.Activo = true;
-        }
-        [Required]
         [Key, ForeignKey("Cliente")]
         public int Id { get; set; }
 

@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.Cliente)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CarritoItems)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Subtotal)
             </th>
             <th></th>
@@ -30,6 +33,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Activo)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cliente.UserName)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Subtotal)
             </td>
