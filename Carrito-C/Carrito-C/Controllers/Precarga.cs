@@ -27,19 +27,98 @@ namespace Carrito_C.Controllers
             CrearAdmin().Wait();
             CrearClientes().Wait();
             CrearEmpleados().Wait();
-
+            CrearSucursales().Wait();
+            CrearCategorias().Wait();
+            CrearProductos().Wait();
+            //CrearStockItem().Wait();
 
             return RedirectToAction("Index", "Home", new { mensaje = "Proceso Seed finalizado" });
         }
 
+        private async Task CrearSucursales()
+        {
+            Sucursal sucursal = new Sucursal()
+            {
+                Nombre = "Sucursal",
+                Direccion = "Sucursal 1234",
+                Email = "Sucursal"+Configs.Email
+
+            };
+            _context.Update(sucursal);
+            await _context.SaveChangesAsync();
+        }
+        private async Task CrearProductos()
+        {
+            Producto producto = new Producto()
+            {
+                Nombre = "´Zapatillas",
+                Descripcion = "Zapatillas",
+                PrecioVigente = 100,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+        };
+            _context.Update(producto);
+            await _context.SaveChangesAsync();
+        }
+        private async Task CrearStockItem()
+        {
+            StockItem producto = new StockItem()
+            {
+                Producto = _context.Productos.First(),
+                Cantidad = 100,
+                Sucursal = _context.Sucursales.First()
+
+            };
+            _context.Update(producto);
+            await _context.SaveChangesAsync();
+        }
+        private async Task CrearCategorias()
+        {
+            Categoria categoria = new Categoria()
+            {
+                Nombre = "Calzado",
+                Descripcion = "Calzado"
+            };
+            _context.Update(categoria);
+            await _context.SaveChangesAsync();
+        }
         private async Task CrearEmpleados()
         {
-            
+            Empleado empleado = new Empleado()
+            {
+                Nombre = "Empleado",
+                Apellido = "Empleado",
+                Dni = 11111112,
+                UserName = "Empleado@ort.edu.ar",
+                Email = "Empleado@ort.edu.ar"
+            };
+
+            var resultadoAddAdmin = await _userManager.CreateAsync(empleado, Configs.PasswordGenerica);
+
+            if (resultadoAddAdmin.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(empleado, Configs.EmpleadoRolName);
+            }
         }
 
         private async Task CrearClientes()
         {
-          
+            Empleado cliente = new Empleado()
+            {
+                Nombre = "Cliente",
+                Apellido = "Cliente",
+                Dni = 11111113,
+                UserName = "Cliente@ort.edu.ar",
+                Email = "Cliente@ort.edu.ar"
+            };
+
+            var resultadoAddAdmin = await _userManager.CreateAsync(cliente, Configs.PasswordGenerica);
+
+            if (resultadoAddAdmin.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(cliente, Configs.ClienteRolName);
+            }
         }
 
         private async Task CrearAdmin()
@@ -52,7 +131,7 @@ namespace Carrito_C.Controllers
                 Email = "admin@ort.edu.ar"                 
             };
 
-            var resultadoAddAdmin = await _userManager.CreateAsync(admin,"Password1!");
+            var resultadoAddAdmin = await _userManager.CreateAsync(admin,Configs.PasswordGenerica);
 
             if (resultadoAddAdmin.Succeeded)
             {
