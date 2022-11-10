@@ -9,17 +9,7 @@ namespace Carrito_C.Models
         {
 
         }
-        public CarritoItem(Producto producto,Carrito carrito, int cantidad)
-        {
-            Carrito = carrito;
-            CarritoId = carrito.Id;
-            Producto = producto;
-            ProductoId = producto.Id;
-            ValorUnitario = producto.PrecioVigente;
-            Cantidad = cantidad;
-            Subtotal = ValorUnitario * cantidad;
 
-        }
         public int Id { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]

@@ -68,6 +68,7 @@ namespace Carrito_C.Controllers
             {
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
+                Carrito carrito = new Carrito() { ClienteId = cliente.Id };
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);

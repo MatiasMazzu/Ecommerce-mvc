@@ -62,7 +62,7 @@
                 @if (User.IsInRole(Configs.ClienteRolName))
                 {
                     <td>
-                        <a asp-action="AgregarAlCarrito" asp-route-id="@item.Id">Agregar Al Carrito</a>
+                        <a asp-action="AgregarAlCarrito" asp-route-productoId="@item.Id">Agregar Al Carrito</a>
                     </td>
                 }
             

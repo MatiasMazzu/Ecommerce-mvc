@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221106003430_unSoloCarrito")]
-    partial class unSoloCarrito
+    [Migration("20221110000424_CarritoACliente")]
+    partial class CarritoACliente
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,15 +27,23 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Carritos");
                 });
@@ -515,8 +523,8 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
-                        .WithOne("Carrito")
-                        .HasForeignKey("Carrito_C.Models.Carrito", "Id")
+                        .WithMany("Carritos")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -718,7 +726,7 @@ namespace Carrito_C.Migrations
 
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
-                    b.Navigation("Carrito");
+                    b.Navigation("Carritos");
 
                     b.Navigation("Compras");
 

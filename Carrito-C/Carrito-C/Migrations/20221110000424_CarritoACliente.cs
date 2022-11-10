@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Carrito_C.Migrations
 {
-    public partial class unSoloCarrito : Migration
+    public partial class CarritoACliente : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -153,8 +153,10 @@ namespace Carrito_C.Migrations
                 name: "Carritos",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Activo = table.Column<bool>(type: "bit", nullable: false),
+                    ClienteId = table.Column<int>(type: "int", nullable: false),
                     Subtotal = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -351,6 +353,11 @@ namespace Carrito_C.Migrations
                 column: "ProductoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Carritos_ClienteId",
+                table: "Carritos",
+                column: "ClienteId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Compras_CarritoId",
                 table: "Compras",
                 column: "CarritoId");
@@ -447,9 +454,9 @@ namespace Carrito_C.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Carritos_Personas_Id",
+                name: "FK_Carritos_Personas_ClienteId",
                 table: "Carritos",
-                column: "Id",
+                column: "ClienteId",
                 principalTable: "Personas",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);

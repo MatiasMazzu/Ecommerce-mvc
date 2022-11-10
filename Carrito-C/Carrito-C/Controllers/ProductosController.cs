@@ -26,12 +26,13 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Productos
-        public async Task<IActionResult> AgregarAlCarrito(int id)
+        public async Task<IActionResult> AgregarAlCarrito(int productoId)
         {
-            Producto producto = await _context.Productos.FindAsync(id);
-            Cliente cliente = await _context.Clientes.FindAsync(Int32.Parse(_usermanager.GetUserId(User)));
-            Carrito carrito = cliente.Carrito;
-            CarritoItem carritoItem = new CarritoItem(producto, carrito, 1);
+            Producto producto = await _context.Productos.FindAsync(productoId);
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Cliente cliente = _context.Clientes.FirstOrDefault(c => c.Id == userId);
+            Carrito carrito = _context.Carritos.Find(userId);
+            CarritoItem carritoItem = new CarritoItem() {CarritoId = carrito.Id, ProductoId = productoId, Cantidad = 1};
             carrito.CarritoItems.Add(carritoItem);
             carrito.Subtotal += carritoItem.Subtotal;
             try

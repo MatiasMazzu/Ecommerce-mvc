@@ -7,14 +7,12 @@ namespace Carrito_C.Models
 {
     public class Carrito
     {
-
-        [Key, ForeignKey("Cliente")]
         public int Id { get; set; }
 
 
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
-
+        public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 

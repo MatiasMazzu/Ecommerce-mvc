@@ -63,16 +63,14 @@ namespace Carrito_C.Controllers
         }
         private async Task CrearStockItem()
         {
-            StockItem producto = new StockItem()
-            {
-                Producto = _context.Productos.First(),
+            StockItem stockItem = new StockItem()
+            {                
                 ProductoId = _context.Productos.First().Id,
-                Cantidad = 100,
-                Sucursal = _context.Sucursales.First(),
+                Cantidad = 100,                
                 SucursalId = _context.Sucursales.First().Id
 
             };
-            _context.Update(producto);
+            _context.Add(stockItem);
             await _context.SaveChangesAsync();
         }
         private async Task CrearCategorias()
@@ -106,7 +104,7 @@ namespace Carrito_C.Controllers
 
         private async Task CrearClientes()
         {
-            Empleado cliente = new Empleado()
+            Cliente cliente = new Cliente()
             {
                 Nombre = "Cliente",
                 Apellido = "Cliente",
@@ -119,6 +117,9 @@ namespace Carrito_C.Controllers
 
             if (resultadoAddAdmin.Succeeded)
             {
+                Carrito carrito = new Carrito() { ClienteId = cliente.Id, Activo = true };
+                _context.Carritos.Add(carrito);
+                _context.SaveChanges();
                 await _userManager.AddToRoleAsync(cliente, Configs.ClienteRolName);
             }
         }

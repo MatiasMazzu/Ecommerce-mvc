@@ -114,6 +114,7 @@ namespace Carrito_C.Controllers
                     Email = viewmodel.Email,
                     UserName = viewmodel.Email
                 };
+                Carrito carrito = new Carrito() { ClienteId = clienteACrear.Id };
 
                 var resultadoCreate = await _usermanager.CreateAsync(clienteACrear, viewmodel.Password);
                 if (resultadoCreate.Succeeded)

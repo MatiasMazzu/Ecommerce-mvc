@@ -25,17 +25,25 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Carritos", (string)null);
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("Carritos");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.CarritoItem", b =>
@@ -67,7 +75,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.ToTable("CarritoItems", (string)null);
+                    b.ToTable("CarritoItems");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Categoria", b =>
@@ -90,7 +98,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categorias", (string)null);
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Compra", b =>
@@ -121,7 +129,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("Compras", (string)null);
+                    b.ToTable("Compras");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
@@ -139,7 +147,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Direccion", (string)null);
+                    b.ToTable("Direccion");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Producto", b =>
@@ -173,7 +181,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Productos", (string)null);
+                    b.ToTable("Productos");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.StockItem", b =>
@@ -191,7 +199,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("SucursalId");
 
-                    b.ToTable("StockItems", (string)null);
+                    b.ToTable("StockItems");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Sucursal", b =>
@@ -221,7 +229,7 @@ namespace Carrito_C.Migrations
 
                     b.HasIndex("TelefonoId");
 
-                    b.ToTable("Sucursales", (string)null);
+                    b.ToTable("Sucursales");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Telefono", b =>
@@ -234,7 +242,7 @@ namespace Carrito_C.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Telefono", (string)null);
+                    b.ToTable("Telefono");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -513,8 +521,8 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
-                        .WithOne("Carrito")
-                        .HasForeignKey("Carrito_C.Models.Carrito", "Id")
+                        .WithMany("Carritos")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -716,7 +724,7 @@ namespace Carrito_C.Migrations
 
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
-                    b.Navigation("Carrito");
+                    b.Navigation("Carritos");
 
                     b.Navigation("Compras");
 
