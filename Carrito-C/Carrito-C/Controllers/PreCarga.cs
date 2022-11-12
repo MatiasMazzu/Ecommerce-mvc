@@ -51,7 +51,7 @@ namespace Carrito_C.Controllers
         {
             Producto producto = new Producto()
             {
-                Nombre = "´Zapatillas",
+                Nombre = "Zapatillas",
                 Descripcion = "Zapatillas",
                 PrecioVigente = 100,
                 Activo = true,
