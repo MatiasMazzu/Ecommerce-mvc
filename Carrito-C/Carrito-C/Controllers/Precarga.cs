@@ -63,15 +63,19 @@ namespace Carrito_C.Controllers
         }
         private async Task CrearStockItem()
         {
-            StockItem stockItem = new StockItem()
-            {                
-                ProductoId = _context.Productos.First().Id,
-                Cantidad = 100,                
-                SucursalId = _context.Sucursales.First().Id
+            StockItem stockItem = _context.StockItems.FirstOrDefault(i => i.ProductoId == _context.Productos.First().Id && i.SucursalId == _context.Sucursales.First().Id);
+            if (stockItem==null)
+            {
+                stockItem = new StockItem()
+                {
+                    ProductoId = _context.Productos.First().Id,
+                    Cantidad = 100,
+                    SucursalId = _context.Sucursales.First().Id
 
-            };
-            _context.Add(stockItem);
-            await _context.SaveChangesAsync();
+                };
+                _context.Add(stockItem);
+                await _context.SaveChangesAsync();
+            }
         }
         private async Task CrearCategorias()
         {
