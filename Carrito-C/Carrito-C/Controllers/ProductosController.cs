@@ -11,6 +11,7 @@ using Carrito_C.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace Carrito_C.Controllers
 {
@@ -69,7 +70,27 @@ namespace Carrito_C.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(producto);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbex)
+                {
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
+                    {
+                        ModelState.AddModelError("Nombre", MsgError.NombreExistente);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbex.Message);
+                    }
+                }
+
+            
+            return View(producto);
+            
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
