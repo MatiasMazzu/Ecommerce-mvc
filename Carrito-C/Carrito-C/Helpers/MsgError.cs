@@ -13,5 +13,10 @@
         public const string Telefono = "El teléfono ingresado no es válido";
         public const string ValorNegativo = "El valor ingresado {0} debe ser siempre mayor a 0";
         public const string PassMissMatch = "El campo {0} no coincide";
+        public const string DNIExistente = "DNI Existente";
+        public const string EmailExistente = "Email Existente";
+        public const string CUITExistente = "CUIT Existente";
+        public const string NombreExistente = "Nombre Existente";
+
     }
 }

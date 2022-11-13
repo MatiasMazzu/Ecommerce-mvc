@@ -4,6 +4,7 @@ using Carrito_C.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    partial class CarritoCContextModelSnapshot : ModelSnapshot
+    [Migration("20221113002712_CUITUnique")]
+    partial class CUITUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -180,6 +182,9 @@ namespace Carrito_C.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoriaId");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
 
                     b.ToTable("Productos");
                 });
@@ -478,10 +483,6 @@ namespace Carrito_C.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL");
-
                     b.HasDiscriminator().HasValue("Persona");
                 });
 
@@ -498,6 +499,10 @@ namespace Carrito_C.Migrations
 
                     b.Property<long>("CUIT")
                         .HasColumnType("bigint");
+
+                    b.HasIndex("CUIT")
+                        .IsUnique()
+                        .HasFilter("[CUIT] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("Cliente");
                 });
