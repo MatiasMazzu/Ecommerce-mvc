@@ -7,22 +7,58 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Carrito_C.Controllers
 {
     public class ComprasController : Controller
     {
         private readonly CarritoCContext _context;
+        private readonly UserManager<Persona> _usermanager;
 
-        public ComprasController(CarritoCContext context)
+        public ComprasController(UserManager<Persona> usermanager, CarritoCContext context)
         {
             _context = context;
+            _usermanager = usermanager;
         }
 
+        public async Task<IActionResult> RealizarCompra(int carritoId)
+        {
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Carrito carrito = _context.Carritos.FirstOrDefault(c => c.Id == carritoId);
+            if (carrito != null)
+            { 
+                    Compra compra = new Compra()
+                    {
+                        ClienteId = userId,
+                        CarritoId = carritoId
+                    };
+                _context.Compras.Add(compra);
+                await _context.SaveChangesAsync();
+
+                foreach (CarritoItem carritoItem in _context.CarritoItems.Where(i => i.CarritoId == carritoId))
+                {
+                    ComprasItem compraItem = new ComprasItem()
+                    {
+                        
+                        CompraId = compra.Id,
+                        ProductoId = carritoItem.ProductoId,
+                        Cantidad = carritoItem.Cantidad,
+                        Subtotal = carritoItem.Subtotal,
+                    };
+                    _context.ComprasItems.Add(compraItem);
+                    _context.CarritoItems.Remove(carritoItem);
+                    
+
+                }
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
         // GET: Compras
         public async Task<IActionResult> Index()
         {
-            var carritoCContext = _context.Compras.Include(c => c.Carrito).Include(c => c.Cliente).Include(c => c.Sucursal);
+            var carritoCContext = _context.Compras.Include(c => c.Carrito).Include(c => c.Cliente);
             return View(await carritoCContext.ToListAsync());
         }
 
@@ -37,7 +73,6 @@ namespace Carrito_C.Controllers
             var compra = await _context.Compras
                 .Include(c => c.Carrito)
                 .Include(c => c.Cliente)
-                .Include(c => c.Sucursal)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (compra == null)
             {
@@ -71,7 +106,6 @@ namespace Carrito_C.Controllers
             }
             ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
             ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
             return View(compra);
         }
 
@@ -90,7 +124,6 @@ namespace Carrito_C.Controllers
             }
             ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
             ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
             return View(compra);
         }
 
@@ -128,7 +161,6 @@ namespace Carrito_C.Controllers
             }
             ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
             ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
             return View(compra);
         }
 
@@ -143,7 +175,6 @@ namespace Carrito_C.Controllers
             var compra = await _context.Compras
                 .Include(c => c.Carrito)
                 .Include(c => c.Cliente)
-                .Include(c => c.Sucursal)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (compra == null)
             {

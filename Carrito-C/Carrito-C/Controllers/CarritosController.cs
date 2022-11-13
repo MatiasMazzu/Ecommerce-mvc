@@ -43,9 +43,12 @@ namespace Carrito_C.Controllers
                         if (item != null)
                         {
                             item.Cantidad++;
+                            item.Subtotal += producto.PrecioVigente;
                             stockItem.Cantidad--;
+                            carrito.Subtotal += item.Subtotal;
                             _context.CarritoItems.Update(item);
                             _context.StockItems.Update(stockItem);
+                            _context.Carritos.Update(carrito);
                             await _context.SaveChangesAsync();
                         }
                         else

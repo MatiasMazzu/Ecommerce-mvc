@@ -19,13 +19,7 @@
                 @Html.DisplayNameFor(model => model.Cliente)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Carrito)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Total)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sucursal)
             </th>
             <th></th>
         </tr>
@@ -40,14 +34,9 @@
                 @Html.DisplayFor(modelItem => item.Cliente.Apellido)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Carrito.Id)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Total)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sucursal.Direccion)
-            </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
