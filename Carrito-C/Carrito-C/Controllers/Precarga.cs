@@ -84,7 +84,7 @@ namespace Carrito_C.Controllers
                 Nombre = "Calzado",
                 Descripcion = "Calzado"
             };
-            _context.<StockItems>.Add(StockItem entity);
+            _context.Categorias.Update(categoria);
 
             await _context.SaveChangesAsync();
         }
