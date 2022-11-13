@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Authorization;
+using Carrito_C.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace Carrito_C.Controllers
 {
@@ -108,7 +110,26 @@ namespace Carrito_C.Controllers
                 try
                 {
                     _context.Update(cliente);
-                    await _context.SaveChangesAsync();
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch(DbUpdateException dbex)
+                    {
+                        SqlException innerException = dbex.InnerException as SqlException;
+                        if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
+                        {
+
+                            ModelState.AddModelError("CUIT", MsgError.CUITExistente);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, dbex.Message);
+                        }
+                    }
+                    return View(cliente);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

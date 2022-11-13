@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221110000424_CarritoACliente")]
-    partial class CarritoACliente
+    [Migration("20221112233002_NoRepetir")]
+    partial class NoRepetir
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
