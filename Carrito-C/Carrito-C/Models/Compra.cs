@@ -22,9 +22,6 @@ namespace Carrito_C.Models
         [DataType(DataType.Currency)]
         public int Total { get; set; }
 
-        [Required(ErrorMessage = MsgError.Requerido)]
-        [Display(Name = Alias.SucursalId)]
-        public int SucursalId { get; set; }
-        public Sucursal Sucursal { get; set; }
+        public List<ComprasItem> ComprasItems { get; set; }
     }
 }
