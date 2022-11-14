@@ -23,5 +23,14 @@ namespace Carrito_C.Models
         public int Total { get; set; }
 
         public List<ComprasItem> ComprasItems { get; set; }
+        public void SetTotal()
+        {
+            Total = 0;
+            foreach(ComprasItem item in ComprasItems)
+            {
+                Total += item.Subtotal;
+            }
+            
+        }
     }
 }

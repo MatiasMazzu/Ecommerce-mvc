@@ -33,25 +33,32 @@ namespace Carrito_C.Controllers
                         ClienteId = userId,
                         CarritoId = carritoId
                     };
-                _context.Compras.Add(compra);
-                await _context.SaveChangesAsync();
+                await AgregarCompra(compra);
 
                 foreach (CarritoItem carritoItem in _context.CarritoItems.Where(i => i.CarritoId == carritoId))
                 {
                     ComprasItem compraItem = new ComprasItem()
                     {
-                        
                         CompraId = compra.Id,
                         ProductoId = carritoItem.ProductoId,
                         Cantidad = carritoItem.Cantidad,
                         Subtotal = carritoItem.Subtotal,
                     };
                     _context.ComprasItems.Add(compraItem);
-                    _context.CarritoItems.Remove(carritoItem);
-                    
-
+                    _context.CarritoItems.Remove(carritoItem);                 
+                }
+                if (compra.ComprasItems != null)
+                {
+                    compra.SetTotal();
+                    carrito.Subtotal = 0;
+                    _context.Carritos.Update(carrito);
+                }
+                else
+                {
+                    _context.Compras.Remove(compra);
                 }
                 await _context.SaveChangesAsync();
+
             }
             return RedirectToAction("Index");
         }
@@ -81,6 +88,13 @@ namespace Carrito_C.Controllers
 
             return View(compra);
         }
+
+        private async Task AgregarCompra(Compra compra)
+        {
+            _context.Compras.Add(compra);
+            await _context.SaveChangesAsync();
+        }
+       
 
         // GET: Compras/Create
         public IActionResult Create()
