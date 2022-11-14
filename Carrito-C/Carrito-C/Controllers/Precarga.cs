@@ -3,6 +3,7 @@ using Carrito_C.Helpers;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
 namespace Carrito_C.Controllers
@@ -44,8 +45,12 @@ namespace Carrito_C.Controllers
                 Email = "Sucursal"+Configs.Email
 
             };
-            _context.Update(sucursal);
-            await _context.SaveChangesAsync();
+            if (_context.Sucursales.FirstOrDefault(s => s.Nombre.Equals(sucursal.Nombre)) == null)
+            {
+                _context.Update(sucursal);
+                await _context.SaveChangesAsync();
+            }
+            
         }
         private async Task CrearProductos()
         {
@@ -58,8 +63,12 @@ namespace Carrito_C.Controllers
                 Categoria = _context.Categorias.First()
 
         };
-            _context.Update(producto);
-            await _context.SaveChangesAsync();
+            if(_context.Productos.FirstOrDefault(p => p.Nombre.Equals(producto.Nombre)) == null)
+            {
+                _context.Add(producto);
+                await _context.SaveChangesAsync();
+            }
+            
         }
         private async Task CrearStockItem()
         {
@@ -84,9 +93,13 @@ namespace Carrito_C.Controllers
                 Nombre = "Calzado",
                 Descripcion = "Calzado"
             };
-            _context.Categorias.Update(categoria);
+            if (_context.Categorias.FirstOrDefault(c => c.Nombre.Equals(categoria.Nombre)) == null)
+            {
+                _context.Categorias.Update(categoria);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
+
         }
         private async Task CrearEmpleados()
         {
