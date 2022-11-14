@@ -32,6 +32,10 @@ namespace Carrito_C.Models
         
         [DataType(DataType.Currency)]
         public int Subtotal { get; set; }
+        public void SetSubtotal()
+        {
+            Subtotal = Cantidad * Producto.PrecioVigente;
+        }
 
     }        
  
