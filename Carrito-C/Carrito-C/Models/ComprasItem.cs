@@ -1,21 +1,17 @@
 ﻿using Carrito_C.Helpers;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace Carrito_C.Models
 {
-    public class CarritoItem
+    public class ComprasItem
     {
-        public CarritoItem()
-        {
-
-        }
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Display(Name = Alias.CarritoId)]
-        public int CarritoId { get; set; }
-        public Carrito Carrito { get; set; }
+        [Display(Name = "Compras")]
+        public int CompraId { get; set; }
+        public Compra Compra { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [Display(Name = Alias.ProductoId)]
@@ -23,20 +19,11 @@ namespace Carrito_C.Models
         public Producto Producto { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [DataType(DataType.Currency)]
-        public int ValorUnitario { get; set; }
-
-        [Required(ErrorMessage = MsgError.Requerido)]
         [Range(Validaciones.CantidadMinInt, Validaciones.CantidadMaxInt, ErrorMessage = MsgError.CommonError2)]
         public int Cantidad { get; set; }
-        
+
+
         [DataType(DataType.Currency)]
         public int Subtotal { get; set; }
-        public void SetSubtotal()
-        {
-            Subtotal = Cantidad * Producto.PrecioVigente;
-        }
-
-    }        
- 
+    }
 }

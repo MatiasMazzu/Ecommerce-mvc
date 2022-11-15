@@ -43,9 +43,12 @@ namespace Carrito_C.Controllers
                         if (item != null)
                         {
                             item.Cantidad++;
+                            item.SetSubtotal();
                             stockItem.Cantidad--;
                             _context.CarritoItems.Update(item);
                             _context.StockItems.Update(stockItem);
+                            carrito.SetSubtotal();
+                            _context.Carritos.Update(carrito);
                             await _context.SaveChangesAsync();
                         }
                         else
@@ -59,6 +62,9 @@ namespace Carrito_C.Controllers
 
                             stockItem.Cantidad--;
                             _context.CarritoItems.Add(nuevoItem);
+                            nuevoItem.SetSubtotal();
+                            carrito.SetSubtotal();
+                            _context.Carritos.Update(carrito);
                             _context.StockItems.Update(stockItem);
                             await _context.SaveChangesAsync();
                         }

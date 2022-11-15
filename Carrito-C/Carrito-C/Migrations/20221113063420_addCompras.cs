@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Carrito_C.Migrations
 {
-    public partial class NoRepetir : Migration
+    public partial class addCompras : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -172,8 +172,7 @@ namespace Carrito_C.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClienteId = table.Column<int>(type: "int", nullable: false),
                     CarritoId = table.Column<int>(type: "int", nullable: false),
-                    Total = table.Column<int>(type: "int", nullable: false),
-                    SucursalId = table.Column<int>(type: "int", nullable: false)
+                    Total = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,6 +183,34 @@ namespace Carrito_C.Migrations
                         principalTable: "Carritos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ComprasItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompraId = table.Column<int>(type: "int", nullable: false),
+                    ProductoId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Subtotal = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComprasItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ComprasItems_Compras_CompraId",
+                        column: x => x.CompraId,
+                        principalTable: "Compras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ComprasItems_Productos_ProductoId",
+                        column: x => x.ProductoId,
+                        principalTable: "Productos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -368,9 +395,14 @@ namespace Carrito_C.Migrations
                 column: "ClienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Compras_SucursalId",
-                table: "Compras",
-                column: "SucursalId");
+                name: "IX_ComprasItems_CompraId",
+                table: "ComprasItems",
+                column: "CompraId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComprasItems_ProductoId",
+                table: "ComprasItems",
+                column: "ProductoId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -378,9 +410,30 @@ namespace Carrito_C.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Personas_CUIT",
+                table: "Personas",
+                column: "CUIT",
+                unique: true,
+                filter: "[CUIT] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Personas_DireccionId",
                 table: "Personas",
                 column: "DireccionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Personas_Dni",
+                table: "Personas",
+                column: "Dni",
+                unique: true,
+                filter: "[Dni] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Personas_Email",
+                table: "Personas",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Personas_TelefonoId",
@@ -403,6 +456,12 @@ namespace Carrito_C.Migrations
                 name: "IX_Productos_CategoriaId",
                 table: "Productos",
                 column: "CategoriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Productos_Nombre",
+                table: "Productos",
+                column: "Nombre",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -470,14 +529,6 @@ namespace Carrito_C.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Compras_Sucursales_SucursalId",
-                table: "Compras",
-                column: "SucursalId",
-                principalTable: "Sucursales",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_Direccion_Personas_Id",
                 table: "Direccion",
                 column: "Id",
@@ -519,7 +570,7 @@ namespace Carrito_C.Migrations
                 name: "CarritoItems");
 
             migrationBuilder.DropTable(
-                name: "Compras");
+                name: "ComprasItems");
 
             migrationBuilder.DropTable(
                 name: "PersonasRoles");
@@ -528,7 +579,7 @@ namespace Carrito_C.Migrations
                 name: "StockItems");
 
             migrationBuilder.DropTable(
-                name: "Carritos");
+                name: "Compras");
 
             migrationBuilder.DropTable(
                 name: "Roles");
@@ -538,6 +589,9 @@ namespace Carrito_C.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sucursales");
+
+            migrationBuilder.DropTable(
+                name: "Carritos");
 
             migrationBuilder.DropTable(
                 name: "Categorias");
