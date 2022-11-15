@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Carrito_C.Controllers
 {
-    public class PreCarga : Controller
+    public class PreCarga : Controller 
     {
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _roleManager;
