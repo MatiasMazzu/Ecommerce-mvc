@@ -80,7 +80,25 @@ namespace Carrito_C.Controllers
 
         private async Task CrearProductos()
         {
-            Producto producto = new Producto()
+            Producto producto1 = new Producto()
+            {
+                Nombre = "ZapatillasDama",
+                Descripcion = "Zapatillas para Dama",
+                PrecioVigente = 15000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+        };
+            Producto producto2 = new Producto()
+            {
+                Nombre = "ZapatillasNiño",
+                Descripcion = "Zapatillas para Niño",
+                PrecioVigente = 10000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            Producto producto3 = new Producto()
             {
                 Nombre = "Zapatillas",
                 Descripcion = "Zapatillas",
@@ -88,8 +106,30 @@ namespace Carrito_C.Controllers
                 Activo = true,
                 Categoria = _context.Categorias.First()
 
-        };
-            _context.Update(producto);
+            };
+            Producto producto4 = new Producto()
+            {
+                Nombre = "ZapatillasHombre",
+                Descripcion = "Zapatillas para Hombre",
+                PrecioVigente = 20000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            Producto producto5 = new Producto()
+            {
+                Nombre = "ZapatillasRunning",
+                Descripcion = "Zapatillas para Running",
+                PrecioVigente = 30000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            _context.Update(producto1);
+            _context.Update(producto2);
+            _context.Update(producto3);
+            _context.Update(producto4);
+            _context.Update(producto5);
             await _context.SaveChangesAsync();
         }
         private async Task CrearStockItem()
