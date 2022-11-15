@@ -37,16 +37,47 @@ namespace Carrito_C.Controllers
 
         private async Task CrearSucursales()
         {
-            Sucursal sucursal = new Sucursal()
+            Sucursal sucursal1 = new Sucursal()
             {
-                Nombre = "Sucursal",
-                Direccion = "Sucursal 1234",
-                Email = "Sucursal"+Configs.Email
+                Nombre = "SucursalCentro",
+                Direccion = "Cerrito 1111",
+                Email = "SucursalCentro"+Configs.Email
 
             };
-            _context.Update(sucursal);
+            Sucursal sucursal2 = new Sucursal()
+            {
+                Nombre = "SucursalNordelta",
+                Direccion = "Av. de los Lagos 2222",
+                Email = "SucursalNordelta" + Configs.Email
+            };
+
+            Sucursal sucursal3 = new Sucursal()
+            {
+                Nombre = "SucursalPalermo",
+                Direccion = "Av. Santa Fe 3333",
+                Email = "SucursalPalermo" + Configs.Email
+            };
+            Sucursal sucursal4 = new Sucursal()
+            {
+                Nombre = "SucursalCañitas",
+                Direccion = "Luis María Campos 4444",
+                Email = "SucursalCanitas" + Configs.Email
+            };
+            Sucursal sucursal5 = new Sucursal()
+            {
+                Nombre = "SucursalLaPlata",
+                Direccion = "Diagonal 73 5555",
+                Email = "SucursalLaPlata" + Configs.Email
+            };
+            _context.Update(sucursal1);
+            _context.Update(sucursal2);
+            _context.Update(sucursal3);
+            _context.Update(sucursal4);
+            _context.Update(sucursal5);
             await _context.SaveChangesAsync();
         }
+       
+
         private async Task CrearProductos()
         {
             Producto producto = new Producto()
