@@ -76,7 +76,7 @@ namespace Carrito_C.Controllers
                     SqlException innerException = dbex.InnerException as SqlException;
                     if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
                     {
-                        ModelState.AddModelError("Dni", MsgError.DNIExistente );
+                        ModelState.AddModelError("Dni", MsgError.DNIExistente);
                         ModelState.AddModelError("Email", MsgError.EmailExistente);
                     }
                     else

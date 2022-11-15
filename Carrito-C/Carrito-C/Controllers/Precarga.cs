@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Carrito_C.Controllers
 {
-    public class PreCarga : Controller
+    public class PreCarga : Controller 
     {
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _roleManager;
@@ -38,37 +38,99 @@ namespace Carrito_C.Controllers
 
         private async Task CrearSucursales()
         {
-            Sucursal sucursal = new Sucursal()
+            Sucursal sucursal1 = new Sucursal()
             {
-                Nombre = "Sucursal",
-                Direccion = "Sucursal 1234",
-                Email = "Sucursal"+Configs.Email
+                Nombre = "SucursalCentro",
+                Direccion = "Cerrito 1111",
+                Email = "SucursalCentro"+Configs.Email
 
             };
-            if (_context.Sucursales.FirstOrDefault(s => s.Nombre.Equals(sucursal.Nombre)) == null)
+            Sucursal sucursal2 = new Sucursal()
             {
-                _context.Update(sucursal);
-                await _context.SaveChangesAsync();
-            }
-            
+                Nombre = "SucursalNordelta",
+                Direccion = "Av. de los Lagos 2222",
+                Email = "SucursalNordelta" + Configs.Email
+            };
+
+            Sucursal sucursal3 = new Sucursal()
+            {
+                Nombre = "SucursalPalermo",
+                Direccion = "Av. Santa Fe 3333",
+                Email = "SucursalPalermo" + Configs.Email
+            };
+            Sucursal sucursal4 = new Sucursal()
+            {
+                Nombre = "SucursalCañitas",
+                Direccion = "Luis María Campos 4444",
+                Email = "SucursalCanitas" + Configs.Email
+            };
+            Sucursal sucursal5 = new Sucursal()
+            {
+                Nombre = "SucursalLaPlata",
+                Direccion = "Diagonal 73 5555",
+                Email = "SucursalLaPlata" + Configs.Email
+            };
+            _context.Update(sucursal1);
+            _context.Update(sucursal2);
+            _context.Update(sucursal3);
+            _context.Update(sucursal4);
+            _context.Update(sucursal5);
+            await _context.SaveChangesAsync();
         }
+       
+
         private async Task CrearProductos()
         {
-            Producto producto = new Producto()
+            Producto producto1 = new Producto()
+            {
+                Nombre = "ZapatillasDama",
+                Descripcion = "Zapatillas para Dama",
+                PrecioVigente = 15000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+        };
+            Producto producto2 = new Producto()
+            {
+                Nombre = "ZapatillasNiño",
+                Descripcion = "Zapatillas para Niño",
+                PrecioVigente = 10000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            Producto producto3 = new Producto()
             {
                 Nombre = "Zapatillas",
                 Descripcion = "Zapatillas",
                 PrecioVigente = 100,
                 Activo = true,
                 Categoria = _context.Categorias.First()
-
-        };
-            if(_context.Productos.FirstOrDefault(p => p.Nombre.Equals(producto.Nombre)) == null)
+            };
+            Producto producto4 = new Producto()
             {
-                _context.Add(producto);
-                await _context.SaveChangesAsync();
-            }
-            
+                Nombre = "ZapatillasHombre",
+                Descripcion = "Zapatillas para Hombre",
+                PrecioVigente = 20000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            Producto producto5 = new Producto()
+            {
+                Nombre = "ZapatillasRunning",
+                Descripcion = "Zapatillas para Running",
+                PrecioVigente = 30000,
+                Activo = true,
+                Categoria = _context.Categorias.First()
+
+            };
+            _context.Update(producto1);
+            _context.Update(producto2);
+            _context.Update(producto3);
+            _context.Update(producto4);
+            _context.Update(producto5);
+            await _context.SaveChangesAsync();
         }
         private async Task CrearStockItem()
         {
@@ -88,18 +150,26 @@ namespace Carrito_C.Controllers
         }
         private async Task CrearCategorias()
         {
-            Categoria categoria = new Categoria()
+            Categoria categoria1 = new Categoria()
             {
                 Nombre = "Calzado",
                 Descripcion = "Calzado"
             };
-            if (_context.Categorias.FirstOrDefault(c => c.Nombre.Equals(categoria.Nombre)) == null)
+            Categoria categoria2 = new Categoria()
             {
-                _context.Categorias.Update(categoria);
+                Nombre = "Indumentaria",
+                Descripcion = "Indumentaria"
+            };
 
-                await _context.SaveChangesAsync();
-            }
-
+            Categoria categoria3 = new Categoria()
+            {
+                Nombre = "Accesorios",
+                Descripcion = "Accesorios"
+            };
+            _context.Update(categoria1);
+            _context.Update(categoria2);
+            _context.Update(categoria3);
+            await _context.SaveChangesAsync();
         }
         private async Task CrearEmpleados()
         {

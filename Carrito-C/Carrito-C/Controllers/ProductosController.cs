@@ -88,11 +88,11 @@ namespace Carrito_C.Controllers
                     }
                 }
 
-            
-            return View(producto);
-            
-                return RedirectToAction(nameof(Index));
             }
+            return View(producto);
+
+        
+            
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
             return View(producto);
         }
