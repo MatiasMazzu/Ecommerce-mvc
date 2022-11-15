@@ -146,12 +146,26 @@ namespace Carrito_C.Controllers
         }
         private async Task CrearCategorias()
         {
-            Categoria categoria = new Categoria()
+            Categoria categoria1 = new Categoria()
             {
                 Nombre = "Calzado",
                 Descripcion = "Calzado"
             };
-            _context.Update(categoria);
+
+            Categoria categoria2 = new Categoria()
+            {
+                Nombre = "Indumentaria",
+                Descripcion = "Indumentaria"
+            };
+
+            Categoria categoria3 = new Categoria()
+            {
+                Nombre = "Accesorios",
+                Descripcion = "Accesorios"
+            };
+            _context.Update(categoria1);
+            _context.Update(categoria2);
+            _context.Update(categoria3);
             await _context.SaveChangesAsync();
         }
         private async Task CrearEmpleados()
