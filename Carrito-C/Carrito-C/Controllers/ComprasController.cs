@@ -49,8 +49,6 @@ namespace Carrito_C.Controllers
                 }
                 if (compra.ComprasItems != null)
                 {
-                    compra.SetTotal();
-                    carrito.Subtotal = 0;
                     _context.Carritos.Update(carrito);
                 }
                 else

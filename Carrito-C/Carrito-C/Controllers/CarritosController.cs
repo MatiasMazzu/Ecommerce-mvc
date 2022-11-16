@@ -24,61 +24,54 @@ namespace Carrito_C.Controllers
             _context = context;
             _usermanager = usermanager;
         }
+
+        // POST: Agrega CarritoItem a la lista de CarritoItems por Id
         [Authorize(Roles = ("Cliente"))]
         public async Task<IActionResult> AgregarAlCarrito(int productoId)
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));
             Producto producto = _context.Productos.FirstOrDefault(p => p.Id == productoId);
-            StockItem stockItem = _context.StockItems.FirstOrDefault(i => i.ProductoId == productoId);
             Carrito carrito = _context.Carritos.FirstOrDefault(c => c.ClienteId == userId && c.Activo == true);
 
-            if (stockItem != null)
+            if (producto != null && carrito != null && producto.Activo)
             {
-                if (stockItem.Cantidad > 0)
+                CarritoItem item = _context.CarritoItems
+                    .FirstOrDefault(i => i.ProductoId == productoId && i.CarritoId == carrito.Id);
+                if (item != null)
                 {
-                    if (producto != null && carrito != null && producto.Activo)
-                    {
-                        CarritoItem item = _context.CarritoItems
-                            .FirstOrDefault(i => i.ProductoId == productoId && i.CarritoId == carrito.Id);
-                        if (item != null)
-                        {
-                            item.Cantidad++;
-                            item.SetSubtotal();
-                            stockItem.Cantidad--;
-                            _context.CarritoItems.Update(item);
-                            _context.StockItems.Update(stockItem);
-                            carrito.SetSubtotal();
-                            _context.Carritos.Update(carrito);
-                            await _context.SaveChangesAsync();
-                        }
-                        else
-                        {
-                            CarritoItem nuevoItem = new CarritoItem()
-                            {
-                                ProductoId = productoId,
-                                CarritoId = carrito.Id,
-                                Cantidad = 1,
-                            };
-
-                            stockItem.Cantidad--;
-                            _context.CarritoItems.Add(nuevoItem);
-                            nuevoItem.SetSubtotal();
-                            carrito.SetSubtotal();
-                            _context.Carritos.Update(carrito);
-                            _context.StockItems.Update(stockItem);
-                            await _context.SaveChangesAsync();
-                        }
-                    }
+                    item.Cantidad++;
+                    _context.CarritoItems.Update(item);
+                    _context.Carritos.Update(carrito);
+                    await _context.SaveChangesAsync();
                 }
+                else
+                {
+                    CarritoItem nuevoItem = new CarritoItem()
+                    {
+                        ProductoId = productoId,
+                        Producto = producto,
+                        CarritoId = carrito.Id,
+                        Carrito = carrito,
+                        Cantidad = 1,
+                    };
 
+                    _context.CarritoItems.Add(nuevoItem);
+                    _context.Carritos.Update(carrito);
+                    _context.SaveChanges();
+                }
             }
-
             return RedirectToAction("Index");
-        }        // GET: Carritos
-        public async Task<IActionResult> Index()
+        }
+
+        // Muestra el carrito del cliente
+        public async Task<IActionResult> GetCarrito()
         {
-            var carritoCContext = _context.Carritos.Include(c => c.Cliente);
-            return View(await carritoCContext.ToListAsync());
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            var carritoCliente = _context.CarritoItems
+                .Where(c => c.Carrito.ClienteId == userId && c.Carrito.Activo)
+                .Include(c => c.Producto);     
+
+            return View("GetCarrito", await carritoCliente.ToListAsync());
         }
 
         // GET: Carritos/Details/5
@@ -210,14 +203,14 @@ namespace Carrito_C.Controllers
             {
                 _context.Carritos.Remove(carrito);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CarritoExists(int id)
         {
-          return _context.Carritos.Any(e => e.Id == id);
+            return _context.Carritos.Any(e => e.Id == id);
         }
     }
 }

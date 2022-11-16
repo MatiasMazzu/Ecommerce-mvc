@@ -16,16 +16,25 @@ namespace Carrito_C.Models
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 
-        [DataType(DataType.Currency)]
-        public int Subtotal { get; set; }
-        public void SetSubtotal()
-        {
-            Subtotal = 0;
-            foreach (CarritoItem item in CarritoItems)
-            {
-                Subtotal += item.Subtotal;
-            }
+        private double Helper = 0;
 
+        [NotMapped]
+        [DataType(DataType.Currency)]
+        public double Subtotal
+        {
+            get
+            {
+                Helper = 0;
+                if (CarritoItems != null)
+                {
+                    foreach (CarritoItem item in CarritoItems)
+                    {
+                        Helper += item.Subtotal;
+                    }
+                }
+                return Helper;
+            }
         }
+
     }
 }

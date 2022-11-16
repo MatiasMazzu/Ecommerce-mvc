@@ -16,7 +16,7 @@ namespace Carrito_C.Controllers
         private readonly UserManager<Persona> _usermanager;
         private readonly SignInManager<Persona> _signInManager;
         private readonly RoleManager<Rol> _rolManager;
-        private readonly CarritoCContext _contexto;
+        private readonly CarritoCContext _context;
                
         public AccountController(UserManager<Persona> usermanager,
             SignInManager<Persona> signInManager, RoleManager<Rol> rolManager, CarritoCContext contexto)
@@ -24,7 +24,7 @@ namespace Carrito_C.Controllers
             this._usermanager = usermanager; 
             this._signInManager = signInManager;
             this._rolManager = rolManager;
-            this._contexto = contexto;
+            this._context = contexto;
         }
         [Authorize(Roles = Configs.AdminRolName+","+Configs.EmpleadoRolName)]
         public IActionResult RegistrarEmpleado()
@@ -105,35 +105,71 @@ namespace Carrito_C.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Registrar([Bind("Email, Password, ConfirmacionPassword")] RegistroUsuario viewmodel)
+        public async Task<IActionResult> Registrar([Bind("Nombre, Apellido, Dni, Direccion, Telefono, Email, Password, ConfirmacionPassword")] RegistroUsuario viewmodel)
         {
             if (ModelState.IsValid)
             {
-                Cliente clienteACrear = new Cliente()
+                var searchCliente = _context.Clientes.FirstOrDefault(c => c.Dni == viewmodel.Dni);
+                var searchEmail = _context.Clientes.FirstOrDefault(c => c.Email == viewmodel.Email);
+                
+                if(searchEmail == null)
                 {
-                    Email = viewmodel.Email,
-                    UserName = viewmodel.Email
-                };
-                Carrito carrito = new Carrito() { ClienteId = clienteACrear.Id };
-
-                var resultadoCreate = await _usermanager.CreateAsync(clienteACrear, viewmodel.Password);
-                if (resultadoCreate.Succeeded)
-                {
-                    var resultadoAddRole = await _usermanager.AddToRoleAsync(clienteACrear, Configs.ClienteRolName);
-                    if (resultadoCreate.Succeeded)
+                    if (searchCliente == null)
                     {
-                        await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
-                        return RedirectToAction("Index", "Home");
+                        Cliente clienteACrear = new Cliente()
+                        {
+                            Email = viewmodel.Email,
+                            UserName = viewmodel.Email,
+                            Nombre = viewmodel.Nombre,
+                            Apellido = viewmodel.Apellido,
+                            Dni = viewmodel.Dni,
+                            Direccion = viewmodel.Direccion,
+                            Telefono = viewmodel.Telefono,
+                            CUIT = 2000000000 + viewmodel.Dni,
+                            Carritos = new List<Carrito>(),
+                            Compras = new List<Compra>()
+                        };
+
+                        var resultadoCreate = await _usermanager.CreateAsync(clienteACrear, viewmodel.Password);
+                        if (resultadoCreate.Succeeded)
+                        {
+                            Carrito carrito = new Carrito()
+                            {
+                                Activo = true,
+                                ClienteId = clienteACrear.Id,
+                                CarritoItems = new List<CarritoItem>()
+                            };
+                            clienteACrear.Carritos.Add(carrito);
+                            _context.Carritos.Add(carrito);
+                            _context.SaveChanges();
+
+                            var resultadoAddRole = await _usermanager.AddToRoleAsync(clienteACrear, Configs.ClienteRolName);
+                            if (resultadoAddRole.Succeeded)
+                            {
+                                await _signInManager.SignInAsync(clienteACrear, isPersistent: false);
+                                return RedirectToAction("Index", "Home");
+                            }
+                            else
+                            {
+                                ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                            }
+                        }
+                        foreach (var error in resultadoCreate.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                        ModelState.AddModelError(string.Empty, "El DNI ingresado ya está asociado a un cliente");
                     }
                 }
-                foreach (var error in resultadoCreate.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, "El email ingresado ya está en uso");
                 }
+
+
             }
             return View(viewmodel);
         }
@@ -177,7 +213,7 @@ namespace Carrito_C.Controllers
             {
                 string nombreUsuario = User.Identity.Name;
                 //voy al contexto de base de datos
-                Persona persona = _contexto.Personas.FirstOrDefault(persona => persona.NormalizedUserName == nombreUsuario.ToUpper());
+                Persona persona = _context.Personas.FirstOrDefault(persona => persona.NormalizedUserName == nombreUsuario.ToUpper());
                 // Otra opcion es buscar por ID y no Por el objeto "persona", voy al contexto de base de datos
                 int personaId = Int32.Parse(_usermanager.GetUserId(User));
                 // Por Claims devuelve un string con los claims

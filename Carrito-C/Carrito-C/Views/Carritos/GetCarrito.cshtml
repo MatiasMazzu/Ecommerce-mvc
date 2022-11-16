@@ -1,0 +1,61 @@
+﻿@using Carrito_C.Helpers
+@model IEnumerable<Carrito_C.Models.CarritoItem>
+@inject Carrito_C.Data.CarritoCContext _context
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+<div class="container">
+    @if (Model != null && Model.Count() > 0)
+    {
+        <h3 class="text-center text-uppercase">Carrito de compras</h3>
+        <table class="table table-striped">
+            <tr>
+                <th scope="col">@Html.DisplayNameFor(c => c.Producto.Nombre)</th>
+                <th scope="col">@Html.DisplayNameFor(c => c.Producto.PrecioVigente)</th>
+                <th scope="col">@Html.DisplayNameFor(c => c.Cantidad)</th>
+                <th scope="col">@Html.DisplayNameFor(c => c.Subtotal)</th>
+                <th scope="col"></th>
+
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Producto.Nombre)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ValorUnitario)</td>
+                    <td>
+                        <a class="btn btn-secondary"
+                           asp-action="RestarProducto" asp-controller="Carritos" asp-route-itemId=@item.Id> - </a>
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                        <a class="btn btn-secondary"
+                           asp-action="SumarProducto" asp-controller="Carritos" asp-route-itemId=@item.Id>+</a>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Subtotal)</td>
+                    <td>
+                        <a class="btn btn-info" asp-action="EliminarProducto" asp-controller="Carritos" asp-route-itemId=@item.Id>Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="alert alert-dark text-lg-start" role="alert">
+            Total: @Html.DisplayFor(model => model.FirstOrDefault().Carrito.Subtotal)
+        </div>
+        <div class="container mt-4 mb-4">
+            <a class="btn btn-secondary text-uppercase"
+               asp-action="VaciarCarrito" asp-controller="Carritos">
+                Vaciar Carrito
+            </a>
+            <a class="btn btn-secondary text-uppercase"
+               asp-action="ElegirSucursal" asp-controller="Compras">
+                Finalizar Compra
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            El carrito esta vacío
+        </div>
+    }
+</div>

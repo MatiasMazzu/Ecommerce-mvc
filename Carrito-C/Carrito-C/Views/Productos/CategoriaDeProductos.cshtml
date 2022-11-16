@@ -1,26 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
+﻿@model IEnumerable<Carrito_C.Models.Producto>;
 @inject Microsoft.AspNetCore.Identity.UserManager<Persona> userManager
 @inject Microsoft.AspNetCore.Identity.SignInManager<Persona> signInManager
-@model IEnumerable<Carrito_C.Models.Producto>;
+@{
+    ViewData["Title"] = @Model.First().Categoria.Nombre;
+}
+
 
 @if (Model != null && Model.Count() > 0)
 {
-    <h3 class="text-center text-uppercase">Nuestros productos</h3>
+    <h3 class="text-center text-uppercase">@Model.First().Categoria.Nombre</h3>
     <hr />
     <div class="row">
-        @foreach (var productos in Model)
+        @foreach (var item in Model)
         {
-            <div class="col-md-4 col-lg-4">
+            <div class="col-md-4 col-lg-3">
+
                 <div class="card m-1">
-                    <img class="card-img-top img-fluid" src="~/img/product/@productos.ImagenArchivo" alt="Card image cap">
+                    <img class="card-img-top img-fluid" src="~/img/productos/@item.ImagenArchivo" alt="Card image cap" height="400" width="400">
                     <div class="card-body">
-                        <h5 class="card-title">@Html.DisplayFor(modelItem => productos.Nombre)</h5>
-                        <p class="card-text">@Html.DisplayFor(modelItem => productos.Descripcion).</p>
-                        <p class="card-text">Precio: @Html.DisplayFor(modelItem => productos.PrecioVigente)</p>
-                        @if ((!signInManager.IsSignedIn(User) || User.IsInRole("Cliente")) && productos.Activo == false)
+                        <h5 class="card-title">@item.Nombre</h5>
+                        <p class="card-text">@item.Descripcion.</p>
+                        <p class="card-text">Precio: @Html.DisplayFor(modelItem => item.PrecioVigente)</p>
+                        @if (item.Activo == false)
                         {
                             <button class="btn btn-primary btn-block text-uppercase" disabled>No disponible</button>
                         }
@@ -29,7 +30,7 @@
                             if (!signInManager.IsSignedIn(User) || User.IsInRole("Cliente"))
                             {
                                 <a class="btn btn-primary btn-block text-uppercase" asp-action="AgregarAlCarrito" asp-controller="Carritos"
-                   asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
+                   asp-route-productoId=@item.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
                                     Agregar al carrito
                                 </a>
                             }
@@ -44,7 +45,8 @@ else
 {
     <div class="container">
         <div class="alert alert-warning text-center" role="alert">
-            No existen productos
+            No hay productos
         </div>
     </div>
 }
+

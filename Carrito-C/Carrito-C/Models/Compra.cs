@@ -20,17 +20,20 @@ namespace Carrito_C.Models
         public Carrito Carrito { get; set; }
 
         [DataType(DataType.Currency)]
-        public int Total { get; set; }
+        public double Total
+        {
+            get
+            {
+                double Total = 0;
+                foreach (ComprasItem item in ComprasItems)
+                {
+                    Total += item.Subtotal;
+                }
+                return Total;
+            }
+        }
 
         public List<ComprasItem> ComprasItems { get; set; }
-        public void SetTotal()
-        {
-            Total = 0;
-            foreach(ComprasItem item in ComprasItems)
-            {
-                Total += item.Subtotal;
-            }
-            
-        }
+        
     }
 }

@@ -1,11 +1,30 @@
 ﻿using Carrito_C.Helpers;
+using Carrito_C.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
 namespace Carrito_C.ViewModels
 {
     public class RegistroUsuario
     {
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [StringLength(Validaciones.NombreMaxString, MinimumLength = Validaciones.NombreMinString,
+            ErrorMessage = MsgError.CommonError)]
+        public string Nombre { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [StringLength(Validaciones.ApellidoMaxString, MinimumLength = Validaciones.ApellidoMinString,
+        ErrorMessage = MsgError.CommonError)]
+        public string Apellido { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Range(Validaciones.DniMin, Validaciones.DniMax, ErrorMessage = MsgError.CommonError)]
+        [Display(Name = Alias.Dni)]
+        public int Dni { get; set; }
+
+        public Telefono Telefono { get; set; }
+
+        public Direccion Direccion { get; set; }
+
         [Required(ErrorMessage = MsgError.Requerido)]
         [EmailAddress(ErrorMessage = MsgError.MsgEmail)]
         [Display(Name = Alias.Mail)]
