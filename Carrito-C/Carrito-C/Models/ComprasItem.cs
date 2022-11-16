@@ -24,6 +24,6 @@ namespace Carrito_C.Models
 
 
         [DataType(DataType.Currency)]
-        public int Subtotal { get; set; }
+        public double Subtotal { get; set; }
     }
 }

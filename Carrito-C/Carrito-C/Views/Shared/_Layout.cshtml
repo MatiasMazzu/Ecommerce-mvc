@@ -1,108 +1,149 @@
-﻿@using Carrito_C.Helpers
+﻿@using Microsoft.AspNetCore.Identity
+@using Carrito_C.Helpers
+@using System.Security.Claims;
+@inject UserManager<Persona> userManager
+@inject SignInManager<Persona> signInManager
+@inject Carrito_C.Data.CarritoCContext _context
+
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CarritoCompra</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/MisEstilos.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Carrito_C.styles.css" asp-append-version="true" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - ShoesBrand</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/MisEstilos.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Carrito_C.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @if(signInManager.IsSignedIn(User)){
-                            if(User.IsInRole(Configs.AdminRolName)||User.IsInRole(Configs.EmpleadoRolName))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Personas" asp-action="Index">Personas</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
-                                </li>
-                            }
-                            if(User.IsInRole(Configs.AdminRolName))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="Index">Empleados</a>
-                                </li>
-                            }
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Index">Productos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Carritos" asp-action="Index">Carritos</a>
-                            </li>
-                            <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Sucursales" asp-action="Index">Sucursales</a>
-                            </li>
-                            if (User.IsInRole(Configs.AdminRolName) || User.IsInRole(Configs.EmpleadoRolName))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Create">AgregarProductos</a>
-                                </li>                               
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="StockItems" asp-action="Index">Stock</a>
-                                </li>
-                                
-                            }
-                            <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="CerrarSesion">Cerrar sesion</a>
-                            </li>
-                            if (User.IsInRole(Configs.AdminRolName) || User.IsInRole(Configs.EmpleadoRolName))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="RegistrarEmpleado">Registrar Empleado</a>
-                                </li>
-                            }
-                        }else{
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Registrar">Registrate</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="IniciarSesion">Iniciar sesion</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+	<header id="aa-header">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.jpg" alt="Logo" /></a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1 justify-content-md-end">
+						@if (!signInManager.IsSignedIn(User))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									@foreach (var cat in _context.Categorias)
+									{
+										<a class="dropdown-item text-dark" asp-controller="Productos" asp-action="ProductosPorCategoria" asp-route-id=@cat.Id>@cat.Nombre</a>
+									}
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Home" asp-action="Locales">Locales</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="IniciarSesion">Iniciar sesión</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Registrar">Registrarse</a>
+							</li>
+						}
+						@if ((signInManager.IsSignedIn(User) && User.IsInRole(Configs.ClienteRolName)))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									@foreach (var cat in _context.Categorias)
+									{
+										<a class="dropdown-item text-dark" asp-controller="Productos" asp-action="ProductosPorCategoria" asp-route-id=@cat.Id>@cat.Nombre</a>
+									}
+								</div>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-controller="Home" asp-action="Locales">Locales</a>
+							</li>
+							// Settea la cantidad de productos en 0
+							var productosCarrito = 0;
+							var carritoItems = _context.CarritoItems
+							.Where(c => c.Carrito.ClienteId == Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)) && c.Carrito.Activo)
+							.ToList();
+							if (carritoItems.Count > 0)
+							{
+								foreach (CarritoItem item in carritoItems)
+								{
+									productosCarrito += item.Cantidad;
+								}
+							}
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Carritos" asp-action="GetCarrito">Carrito <span class="badge badge-@(productosCarrito > 0 ? "success" : "secondary")">@productosCarrito</span></a>
+							</li>
+							<li class="nav-item dropdown">
+								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">@User.Identity.Name</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									<a class="dropdown-item text-dark" asp-area="" asp-controller="Compras" asp-action="ClienteCompras">Compras</a>
+									<a class="dropdown-item text-dark" asp-controller="Clientes" asp-action="ClientePerfil">Perfil</a>
+									<a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="CerrarSesion">Cerrar Sesión</a>
+								</div>
+							</li>
+						}
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - CarritoCompra <a asp-action="Seed" asp-controller="PreCarga" class="btn btn-sm btn-info">Pre Carga Db</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+						@if (User.IsInRole(Configs.AdminRolName) || User.IsInRole(Configs.EmpleadoRolName))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Personas" asp-action="Index">Personas</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Clientes" asp-action="Index">Clientes</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="Create">AgregarProductos</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Categorias" asp-action="Index">Categorias</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Compras" asp-action="Index">Compras</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="StockItems" asp-action="Index">Stock</a>
+							</li>
+						}
+						@if (signInManager.IsSignedIn(User) && User.IsInRole(Configs.AdminRolName))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Empleados" asp-action="Index">Empleados</a>
+							</li>
+						}
 
-    @await RenderSectionAsync("Scripts", required: false)
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="border-top footer text-muted">
+		<div class="container">
+			&copy; NT1-2022. TODOS LOS DERECHOS RESERVADOS <a asp-action="Seed" asp-controller="PreCarga" class="btn btn-sm btn-info">Pre Carga Db</a>
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+
+	@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

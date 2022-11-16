@@ -36,9 +36,6 @@ namespace Carrito_C.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Subtotal")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClienteId");
@@ -61,12 +58,6 @@ namespace Carrito_C.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Subtotal")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ValorUnitario")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -115,9 +106,6 @@ namespace Carrito_C.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CarritoId");
@@ -144,8 +132,8 @@ namespace Carrito_C.Migrations
                     b.Property<int>("ProductoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Subtotal")
-                        .HasColumnType("int");
+                    b.Property<double>("Subtotal")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -192,6 +180,9 @@ namespace Carrito_C.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ImagenArchivo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()

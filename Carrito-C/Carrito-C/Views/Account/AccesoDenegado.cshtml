@@ -3,7 +3,7 @@
     bool hayReturnUrl = !String.IsNullOrEmpty(ViewBag.ReturnUrl);
 }
 <div class="text-center text-white" style="background-color:black">
-    <h1> No posee autorización gerárquica @if (hayReturnUrl)
+    <h1> No posee autorización jerárquica @if (hayReturnUrl)
         {<span> Para acceder a @ViewBag.ReturnUrl</span>}
     </h1>
     <img src="~/img/ACCESO DENEGADO IMG.webp"/>

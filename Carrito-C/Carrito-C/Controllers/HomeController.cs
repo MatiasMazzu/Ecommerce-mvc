@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Carrito_C.Data;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,15 +8,33 @@ namespace Carrito_C.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CarritoCContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CarritoCContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index(String mensaje)
+        // GET: Muestra todos los productos
+        public IActionResult Index()
         {
-            ViewBag.Mensaje = mensaje;
+            ViewBag.ReturnUrl = HttpContext.Request.Path.ToString();
+            var productos = _context.Productos
+                .Where(p => p.Activo == true)
+                .ToList();
+            return View(productos);
+        }
+
+        // GET: Muestra las sucursales
+        public IActionResult Locales()
+        {
+            var sucursales = _context.Sucursales.ToList();
+            return View(sucursales);
+        }
+
+        public IActionResult AboutUs()
+        {
             return View();
         }
 

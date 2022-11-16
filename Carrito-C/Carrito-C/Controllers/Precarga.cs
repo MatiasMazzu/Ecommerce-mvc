@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Carrito_C.Controllers
 {
@@ -40,35 +41,35 @@ namespace Carrito_C.Controllers
         {
             Sucursal sucursal1 = new Sucursal()
             {
-                Nombre = "SucursalCentro",
+                Nombre = "Centro",
                 Direccion = "Cerrito 1111",
-                Email = "SucursalCentro"+Configs.Email
+                Email = "sucursalcentro"+Configs.Email
 
             };
             Sucursal sucursal2 = new Sucursal()
             {
-                Nombre = "SucursalNordelta",
+                Nombre = "Nordelta",
                 Direccion = "Av. de los Lagos 2222",
-                Email = "SucursalNordelta" + Configs.Email
+                Email = "sucursalnordelta" + Configs.Email
             };
 
             Sucursal sucursal3 = new Sucursal()
             {
-                Nombre = "SucursalPalermo",
+                Nombre = "Palermo",
                 Direccion = "Av. Santa Fe 3333",
-                Email = "SucursalPalermo" + Configs.Email
+                Email = "sucursalpalermo" + Configs.Email
             };
             Sucursal sucursal4 = new Sucursal()
             {
-                Nombre = "SucursalCañitas",
+                Nombre = "Cañitas",
                 Direccion = "Luis María Campos 4444",
-                Email = "SucursalCanitas" + Configs.Email
+                Email = "sucursalcanitas" + Configs.Email
             };
             Sucursal sucursal5 = new Sucursal()
             {
-                Nombre = "SucursalLaPlata",
+                Nombre = "La Plata",
                 Direccion = "Diagonal 73 5555",
-                Email = "SucursalLaPlata" + Configs.Email
+                Email = "sucursallaplata" + Configs.Email
             };
             _context.Update(sucursal1);
             _context.Update(sucursal2);
@@ -81,55 +82,149 @@ namespace Carrito_C.Controllers
 
         private async Task CrearProductos()
         {
+
+            var mujer = _context.Categorias.FirstOrDefault(c => c.Nombre == "Running Mujer");
+            var hombre = _context.Categorias.FirstOrDefault(c => c.Nombre == "Running Hombre");
+            var ninios = _context.Categorias.FirstOrDefault(c => c.Nombre == "Running Niños");
+
             Producto producto1 = new Producto()
             {
-                Nombre = "ZapatillasDama",
-                Descripcion = "Zapatillas para Dama",
-                PrecioVigente = 15000,
+                Nombre = "Ribuk Air 25",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 12500,
                 Activo = true,
-                Categoria = _context.Categorias.First()
-
-        };
+                Categoria = mujer,
+                ImagenArchivo = "dama1.1.png"
+            };
             Producto producto2 = new Producto()
             {
-                Nombre = "ZapatillasNiño",
-                Descripcion = "Zapatillas para Niño",
-                PrecioVigente = 10000,
+                Nombre = "Ribuk Run 001",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 13000,
                 Activo = true,
-                Categoria = _context.Categorias.First()
-
+                Categoria = mujer,
+                ImagenArchivo = "dama2.1.png"
             };
             Producto producto3 = new Producto()
             {
-                Nombre = "Zapatillas",
-                Descripcion = "Zapatillas",
-                PrecioVigente = 100,
+                Nombre = "Ardidas 1525",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 11000,
                 Activo = true,
-                Categoria = _context.Categorias.First()
+                Categoria = mujer,
+                ImagenArchivo = "dama3.3.png"
             };
             Producto producto4 = new Producto()
             {
-                Nombre = "ZapatillasHombre",
-                Descripcion = "Zapatillas para Hombre",
-                PrecioVigente = 20000,
+                Nombre = "Ardidas 2022",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 16000,
                 Activo = true,
-                Categoria = _context.Categorias.First()
-
+                Categoria = mujer,
+                ImagenArchivo = "dama4.1.jpg"
             };
             Producto producto5 = new Producto()
             {
-                Nombre = "ZapatillasRunning",
-                Descripcion = "Zapatillas para Running",
-                PrecioVigente = 30000,
+                Nombre = "Naik RBZ",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 22000,
                 Activo = true,
-                Categoria = _context.Categorias.First()
-
+                Categoria = mujer,
+                ImagenArchivo = "dama5.1.png"
+            };
+            Producto producto6 = new Producto()
+            {
+                Nombre = "Naik RRR",
+                Descripcion = "Zapatillas de running para mujer",
+                PrecioVigente = 28000,
+                Activo = true,
+                Categoria = mujer,
+                ImagenArchivo = "dama6.1.png"
+            };
+            Producto producto7 = new Producto()
+            {
+                Nombre = "Ribuk Air 30",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 22000,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre1.1.png"
+            };
+            Producto producto8 = new Producto()
+            {
+                Nombre = "Ribuk Air Max",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 21000,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre2.1.jpg"
+            };
+            Producto producto9 = new Producto()
+            {
+                Nombre = "Ardidas Z1000",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 19500,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre3.1.jpg"
+            };
+            Producto producto10 = new Producto()
+            {
+                Nombre = "Ardidas MT09",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 17500,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre4.1.png"
+            };
+            Producto producto11 = new Producto()
+            {
+                Nombre = "Naik RC200",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 21500,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre5.1.jpg"
+            };
+            Producto producto12 = new Producto()
+            {
+                Nombre = "Naik MONSTER",
+                Descripcion = "Zapatillas de running para hombre",
+                PrecioVigente = 28500,
+                Activo = true,
+                Categoria = hombre,
+                ImagenArchivo = "hombre6.1.png"
+            };
+            Producto producto13 = new Producto()
+            {
+                Nombre = "Footi Repsol",
+                Descripcion = "Zapatillas de running para niñxs",
+                PrecioVigente = 12500,
+                Activo = true,
+                Categoria = ninios,
+                ImagenArchivo = "ninios1.1.png"
+            };
+            Producto producto14 = new Producto()
+            {
+                Nombre = "Footi Honda",
+                Descripcion = "Zapatillas de running para niñxs",
+                PrecioVigente = 14500,
+                Activo = true,
+                Categoria = ninios,
+                ImagenArchivo = "ninios2.1.png"
             };
             _context.Update(producto1);
             _context.Update(producto2);
             _context.Update(producto3);
             _context.Update(producto4);
             _context.Update(producto5);
+            _context.Update(producto6);
+            _context.Update(producto7);
+            _context.Update(producto8);
+            _context.Update(producto9);
+            _context.Update(producto10);
+            _context.Update(producto11);
+            _context.Update(producto12);
             await _context.SaveChangesAsync();
         }
         private async Task CrearStockItem()
@@ -152,24 +247,34 @@ namespace Carrito_C.Controllers
         {
             Categoria categoria1 = new Categoria()
             {
-                Nombre = "Calzado",
-                Descripcion = "Calzado"
+                Nombre = "Running Mujer",
+                Descripcion = "Zapatillas de running p/ mujer"
             };
+            if (!_context.Categorias.Any(c => c.Nombre == "Running Mujer"))
+            {
+                _context.Categorias.Add(categoria1);
+                await _context.SaveChangesAsync();
+            }
             Categoria categoria2 = new Categoria()
             {
-                Nombre = "Indumentaria",
-                Descripcion = "Indumentaria"
+                Nombre = "Running Hombre",
+                Descripcion = "Zapatillas de running p/ hombre"
             };
-
+            if (!_context.Categorias.Any(c => c.Nombre == "Running Hombre"))
+            {
+                _context.Categorias.Add(categoria2);
+                await _context.SaveChangesAsync();
+            }
             Categoria categoria3 = new Categoria()
             {
-                Nombre = "Accesorios",
-                Descripcion = "Accesorios"
+                Nombre = "Running Niños",
+                Descripcion = "Zapatillas de running p/ niños"
             };
-            _context.Update(categoria1);
-            _context.Update(categoria2);
-            _context.Update(categoria3);
-            await _context.SaveChangesAsync();
+            if (!_context.Categorias.Any(c => c.Nombre == "Running Niños"))
+            {
+                _context.Categorias.Add(categoria3);
+                await _context.SaveChangesAsync();
+            }
         }
         private async Task CrearEmpleados()
         {
