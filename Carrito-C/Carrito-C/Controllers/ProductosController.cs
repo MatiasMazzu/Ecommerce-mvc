@@ -25,6 +25,12 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> ProductosPorCategoria(int id)
+        {
+            var carritoCContext = _context.Productos.Include(p => p.Categoria).Where(p => p.CategoriaId == id);
+            return View("../Home/Index", await carritoCContext.ToListAsync());
+        }
+
         // GET: Productos
         public async Task<IActionResult> Index()
         {
