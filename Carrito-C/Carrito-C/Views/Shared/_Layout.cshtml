@@ -16,13 +16,14 @@
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/MisEstilos.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/font-awesome.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/Carrito_C.styles.css" asp-append-version="true" />
 </head>
 <body>
 	<header id="aa-header">
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.jpg" alt="Logo" /></a>
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/img/logo.jpg" alt="Logo" /></a>ShoesBrand
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -32,10 +33,10 @@
 						@if (!signInManager.IsSignedIn(User))
 						{
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house"></i></a>
 							</li>
 							<li class="nav-item dropdown">
-								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+								<a class="nav-link text-dark dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 									@foreach (var cat in _context.Categorias)
 									{
@@ -56,10 +57,10 @@
 						@if ((signInManager.IsSignedIn(User) && User.IsInRole(Configs.ClienteRolName)))
 						{
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house"></i></a>
 							</li>
 							<li class="nav-item dropdown">
-								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
+								<a class="nav-link text-dark dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 									@foreach (var cat in _context.Categorias)
 									{
@@ -86,8 +87,8 @@
 								<a class="nav-link text-dark" asp-area="" asp-controller="Carritos" asp-action="GetCarrito">Carrito <span class="badge badge-@(productosCarrito > 0 ? "success" : "secondary")">@productosCarrito</span></a>
 							</li>
 							<li class="nav-item dropdown">
-								<a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">@User.Identity.Name</a>
-								<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<a class="nav-link text-dark dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 									<a class="dropdown-item text-dark" asp-area="" asp-controller="Compras" asp-action="ClienteCompras">Compras</a>
 									<a class="dropdown-item text-dark" asp-controller="Clientes" asp-action="ClientePerfil">Perfil</a>
 									<a class="dropdown-item text-dark" asp-area="" asp-controller="Account" asp-action="CerrarSesion">Cerrar Sesión</a>

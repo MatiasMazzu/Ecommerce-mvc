@@ -9,30 +9,27 @@ namespace Carrito_C.Models
     {
         public int Id { get; set; }
 
-
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
         public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 
-        private double Helper = 0;
-
         [NotMapped]
         [DataType(DataType.Currency)]
-        public double Subtotal
+        public double Total
         {
             get
             {
-                Helper = 0;
-                if (CarritoItems != null)
+                double total = 0;
+                if(CarritoItems != null)
                 {
-                    foreach (CarritoItem item in CarritoItems)
+                    foreach(CarritoItem item in CarritoItems)
                     {
-                        Helper += item.Subtotal;
+                        total += item.Subtotal;
                     }
                 }
-                return Helper;
+                return total;
             }
         }
 

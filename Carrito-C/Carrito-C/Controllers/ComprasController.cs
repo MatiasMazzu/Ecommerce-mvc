@@ -27,11 +27,13 @@ namespace Carrito_C.Controllers
             int userId = Int32.Parse(_usermanager.GetUserId(User));
             Carrito carrito = _context.Carritos.FirstOrDefault(c => c.Id == carritoId);
             if (carrito != null)
-            { 
-                    Compra compra = new Compra()
-                    {
-                        ClienteId = userId,
-                        CarritoId = carritoId
+            {
+                Compra compra = new Compra()
+                {
+                    ClienteId = userId,
+                    CarritoId = carritoId,
+                    // TODO checkear stock y elegir sucursal de compra
+                    SucursalId = _context.Sucursales.First().Id
                     };
                 await AgregarCompra(compra);
 
@@ -56,6 +58,11 @@ namespace Carrito_C.Controllers
                     _context.Compras.Remove(compra);
                 }
                 await _context.SaveChangesAsync();
+
+                // TODO Agregar método que calcule el total
+                //compra.Total = 
+                //    _update.
+                //    _savechanges
 
             }
             return RedirectToAction("Index");

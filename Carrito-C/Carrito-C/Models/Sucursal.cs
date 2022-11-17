@@ -14,7 +14,7 @@ namespace Carrito_C.Models
 
         public string Direccion { get; set; }
 
-        public Telefono Telefono { get; set; }
+        public string Telefono { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.EmailAddress, ErrorMessage = MsgError.MsgEmail)]
@@ -23,5 +23,8 @@ namespace Carrito_C.Models
 
         public List<StockItem> ProductosSucursal { get; set; }
 
+        [Display(Name = Alias.ImagenArchivo)]
+        public string ImagenArchivo { get; set; }
     }
 }
+
