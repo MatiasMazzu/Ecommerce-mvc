@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221116052121_NewMigration")]
-    partial class NewMigration
+    [Migration("20221116210155_NewDb")]
+    partial class NewDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,17 +237,18 @@ namespace Carrito_C.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagenArchivo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("TelefonoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TelefonoId");
 
                     b.ToTable("Sucursales");
                 });
@@ -657,15 +658,6 @@ namespace Carrito_C.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Sucursal");
-                });
-
-            modelBuilder.Entity("Carrito_C.Models.Sucursal", b =>
-                {
-                    b.HasOne("Carrito_C.Models.Telefono", "Telefono")
-                        .WithMany()
-                        .HasForeignKey("TelefonoId");
-
-                    b.Navigation("Telefono");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Telefono", b =>

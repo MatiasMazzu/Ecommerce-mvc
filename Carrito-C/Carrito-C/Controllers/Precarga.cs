@@ -9,14 +9,14 @@ using System.Runtime.Serialization;
 
 namespace Carrito_C.Controllers
 {
-    public class PreCarga : Controller 
+    public class Precarga : Controller 
     {
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _roleManager;
         private readonly CarritoCContext _context;
 
         private List<String> roles = new List<String>() { Configs.AdminRolName, Configs.ClienteRolName, Configs.EmpleadoRolName};
-        public PreCarga(UserManager<Persona> userManager ,RoleManager<Rol> roleManager, CarritoCContext context)
+        public Precarga(UserManager<Persona> userManager ,RoleManager<Rol> roleManager, CarritoCContext context)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
@@ -40,42 +40,43 @@ namespace Carrito_C.Controllers
         private async Task CrearSucursales()
         {
             Sucursal sucursal1 = new Sucursal()
-            {
+            { 
+                ImagenArchivo = "shop1.jpg",
                 Nombre = "Centro",
                 Direccion = "Cerrito 1111",
-                Email = "sucursalcentro"+Configs.Email
+                Email = "sucursalcentro"+Configs.Email,
+                Telefono = "38234020"
 
             };
             Sucursal sucursal2 = new Sucursal()
             {
+                ImagenArchivo = "shop2.jpg",
                 Nombre = "Nordelta",
                 Direccion = "Av. de los Lagos 2222",
-                Email = "sucursalnordelta" + Configs.Email
+                Email = "sucursalnordelta" + Configs.Email,
+                Telefono = "55250032"
             };
 
             Sucursal sucursal3 = new Sucursal()
             {
+                ImagenArchivo = "shop3.jpg",
                 Nombre = "Palermo",
                 Direccion = "Av. Santa Fe 3333",
-                Email = "sucursalpalermo" + Configs.Email
+                Email = "sucursalpalermo" + Configs.Email,
+                Telefono = "23450909"
             };
             Sucursal sucursal4 = new Sucursal()
             {
+                ImagenArchivo = "shop4.jpg",
                 Nombre = "Cañitas",
                 Direccion = "Luis María Campos 4444",
-                Email = "sucursalcanitas" + Configs.Email
-            };
-            Sucursal sucursal5 = new Sucursal()
-            {
-                Nombre = "La Plata",
-                Direccion = "Diagonal 73 5555",
-                Email = "sucursallaplata" + Configs.Email
+                Email = "sucursalcanitas" + Configs.Email,
+                Telefono = "44115169"
             };
             _context.Update(sucursal1);
             _context.Update(sucursal2);
             _context.Update(sucursal3);
             _context.Update(sucursal4);
-            _context.Update(sucursal5);
             await _context.SaveChangesAsync();
         }
        
