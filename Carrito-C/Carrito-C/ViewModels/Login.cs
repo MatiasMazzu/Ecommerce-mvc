@@ -16,6 +16,7 @@ namespace Carrito_C.ViewModels
         public string Password { get; set; }
 
         public bool Recordarme { get; set; }
+        public int productoId { get; set; }
 
     }
 }

@@ -174,21 +174,29 @@ namespace Carrito_C.Controllers
             return View(viewmodel);
         }
         [AllowAnonymous]
-        public IActionResult IniciarSesion()
+        public IActionResult IniciarSesion(int productoId)
         {
+            ViewBag.ProductoId = productoId;
             return View();
         }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(Login viewmodel)
         {
             if (ModelState.IsValid)
             {
-
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
                 if (resultado.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
+                {   
+                    if(viewmodel.productoId > 0)
+                    {
+                        return RedirectToAction("AgregarAlCarrito", "Carritos", new { productoId = viewmodel.productoId });
+                    }else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    
                 }
                 ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
             }

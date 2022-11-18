@@ -1,5 +1,4 @@
 ﻿@model Login
-
 @{
     ViewData["Title"] = "Iniciar sesion";
 }
@@ -25,6 +24,7 @@
                 <input asp-for="Recordarme" class="form-check-control" />
                 <span asp-validation-for="Recordarme" class="text-danger"></span>
              </div>
+                     <input asp-for="productoId" value=@ViewBag.ProductoId hidden/>
              <div class="form-group">
                  <input type="submit" value="Login" class="btn btn-primary" />
              </div>

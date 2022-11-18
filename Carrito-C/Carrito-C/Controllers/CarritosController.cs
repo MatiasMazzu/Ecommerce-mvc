@@ -133,6 +133,17 @@ namespace Carrito_C.Controllers
             return RedirectToAction(nameof(GetCarrito));
 
         }
+        public async Task<IActionResult> EliminarProducto(int itemId)
+        {
+            CarritoItem item = _context.CarritoItems.FirstOrDefault(i => i.Id == itemId);
+            if(item != null) 
+            {
+                _context.CarritoItems.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            
+            return RedirectToAction(nameof(GetCarrito));
+        }
         private bool CarritoExists(int id)
         {
             return _context.Carritos.Any(e => e.Id == id);
