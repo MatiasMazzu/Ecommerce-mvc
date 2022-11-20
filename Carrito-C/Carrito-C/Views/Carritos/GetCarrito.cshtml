@@ -45,7 +45,7 @@
             }
         </table>
         <div class="alert alert-dark text-lg-start" role="alert">
-            Total: @Html.DisplayFor(modelItem => modelItem.FirstOrDefault().Carrito.Total)
+            @(((decimal)total).ToString("C2"))
         </div>
         <div class="container mt-4 mb-4">
             <a class="btn btn-info"
@@ -53,8 +53,8 @@
                 <i class="bi bi-cart-x"></i> Vaciar Carrito
             </a>
             <a class="btn btn-info"
-           asp-action="RealizarCompra" asp-controller="Compras" asp-route-carritoId="@Model.FirstOrDefault().CarritoId">
-                <i class="bi bi-bag-check"></i> Finalizar Compra
+           asp-action="SeleccionLocal" asp-controller="Compras" asp-route-carritoId="@Model.FirstOrDefault().CarritoId">
+                <i class="bi bi-bag-check"></i> Selecciona la sucursal
             </a>
         </div>
     }
@@ -64,4 +64,10 @@
             No hay productos en el carrito
         </div>
     }
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary text-uppercase" asp-action="Index" asp-controller="Home">
+            Volver al Inicio
+        </a>
+    </p>
 </div>

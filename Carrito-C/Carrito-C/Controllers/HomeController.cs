@@ -27,7 +27,7 @@ namespace Carrito_C.Controllers
         }
 
         // GET: Muestra las sucursales
-        public IActionResult Locales()
+        public IActionResult Sucursales()
         {
             var sucursales = _context.Sucursales.ToList();
             return View(sucursales);

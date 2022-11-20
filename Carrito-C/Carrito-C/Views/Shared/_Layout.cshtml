@@ -45,7 +45,7 @@
 								</div>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-controller="Home" asp-action="Locales">Locales</a>
+								<a class="nav-link text-dark" asp-controller="Home" asp-action="Sucursales">Encontranos</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="IniciarSesion">Iniciar sesión</a>
@@ -69,7 +69,7 @@
 								</div>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-controller="Home" asp-action="Locales">Locales</a>
+								<a class="nav-link text-dark" asp-controller="Home" asp-action="Sucursales">Encontranos</a>
 							</li>
 							// Settea la cantidad de productos en 0
 							var productosCarrito = 0;
@@ -84,7 +84,7 @@
 								}
 							}
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-controller="Carritos" asp-action="GetCarrito">Carrito <span class="badge badge-@(productosCarrito > 0 ? "success" : "secondary")">@productosCarrito</span></a>
+								<a class="nav-link text-dark" asp-area="" asp-controller="Carritos" asp-action="GetCarrito"><i class="bi bi-bag"></i> Carrito <span class="badge badge-@(productosCarrito > 0 ? "success" : "secondary")">@productosCarrito</span></a>
 							</li>
 							<li class="nav-item dropdown">
 								<a class="nav-link text-dark dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-circle"></i></a>
