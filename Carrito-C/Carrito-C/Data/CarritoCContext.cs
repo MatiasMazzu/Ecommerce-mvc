@@ -1,7 +1,5 @@
 ﻿using Carrito_C.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -34,6 +32,22 @@ namespace Carrito_C.Data
             modelBuilder.Entity<IdentityUser<int>>().ToTable("Personas");
             modelBuilder.Entity<IdentityRole<int>>().ToTable("Roles");
             modelBuilder.Entity<IdentityUserRole<int>>().ToTable("PersonasRoles");
+
+            #region Unique
+            modelBuilder.Entity<Producto>().HasIndex(p => p.Nombre).IsUnique();
+            #endregion
+
+            #region Unique
+            modelBuilder.Entity<Cliente>().HasIndex(c => c.CUIT).IsUnique();
+            #endregion
+
+            #region Unique
+            modelBuilder.Entity<Persona>().HasIndex(per => per.Dni).IsUnique();
+            #endregion
+
+            #region Unique
+            modelBuilder.Entity<Persona>().HasIndex(per => per.Email).IsUnique();
+            #endregion
         }
 
 
@@ -42,6 +56,7 @@ namespace Carrito_C.Data
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Compra> Compras { get; set; }
+        public DbSet<ComprasItem> ComprasItems { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Persona> Personas { get; set; }
         public DbSet<Producto> Productos { get; set; }

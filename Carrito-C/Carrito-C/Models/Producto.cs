@@ -33,5 +33,8 @@ namespace Carrito_C.Models
         public Categoria Categoria { get; set; }
 
         public List<StockItem> ProductoSucursales { get; set; }
+
+        [Display(Name = Alias.ImagenArchivo)]
+        public string ImagenArchivo { get; set; }
     }
 }

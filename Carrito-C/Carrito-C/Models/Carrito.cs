@@ -7,18 +7,31 @@ namespace Carrito_C.Models
 {
     public class Carrito
     {
-
-        [Key, ForeignKey("Cliente")]
         public int Id { get; set; }
-
 
         [Required(ErrorMessage = MsgError.Requerido)]
         public bool Activo { get; set; }
-
+        public int ClienteId { get; set; }
         public Cliente Cliente { get; set; }
         public List <CarritoItem> CarritoItems{ get; set; }
 
+        [NotMapped]
         [DataType(DataType.Currency)]
-        public int Subtotal { get; set; }
+        public double Total
+        {
+            get
+            {
+                double total = 0;
+                if(CarritoItems != null)
+                {
+                    foreach(CarritoItem item in CarritoItems)
+                    {
+                        total += item.Subtotal;
+                    }
+                }
+                return total;
+            }
+        }
+
     }
 }

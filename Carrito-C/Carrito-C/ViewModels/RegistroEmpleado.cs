@@ -16,5 +16,31 @@ namespace Carrito_C.ViewModels
         ErrorMessage = MsgError.CommonError)]
         public string Apellido { get; set; }
 
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Range(Validaciones.DniMin, Validaciones.DniMax, ErrorMessage = MsgError.CommonError)]
+        [Display(Name = Alias.Dni)]
+        public int Dni { get; set; }
+
+        public Telefono Telefono { get; set; }
+
+        public Direccion Direccion { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [EmailAddress(ErrorMessage = MsgError.MsgEmail)]
+        [Display(Name = Alias.Mail)]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [DataType(DataType.Password)]
+        [Display(Name = Alias.Password)]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [DataType(DataType.Password)]
+        [Display(Name = Alias.ConfirmPassword)]
+        [Compare("Password", ErrorMessage = MsgError.PassMissMatch)]
+        public string ConfirmacionPassword { get; set; }
+
+        public string Rol { get; set; }
     }
 }

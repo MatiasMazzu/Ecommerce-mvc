@@ -7,7 +7,6 @@ namespace Carrito_C.Models
         public long CUIT { get; set; } 
         public List<Compra> Compras { get; set; }
 
-        [Required]
-        public Carrito Carrito { get; set; }
+        public List<Carrito> Carritos { get; set; }
     }
 }

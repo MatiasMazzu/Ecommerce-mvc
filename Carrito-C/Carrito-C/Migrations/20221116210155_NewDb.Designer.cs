@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221106003430_unSoloCarrito")]
-    partial class unSoloCarrito
+    [Migration("20221116210155_NewDb")]
+    partial class NewDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,15 +27,20 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Subtotal")
+                    b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Carritos");
                 });
@@ -55,12 +60,6 @@ namespace Carrito_C.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Subtotal")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ValorUnitario")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -109,21 +108,42 @@ namespace Carrito_C.Migrations
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SucursalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Total")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CarritoId");
 
                     b.HasIndex("ClienteId");
 
-                    b.HasIndex("SucursalId");
-
                     b.ToTable("Compras");
+                });
+
+            modelBuilder.Entity("Carrito_C.Models.ComprasItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompraId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Subtotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("ComprasItems");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
@@ -163,6 +183,9 @@ namespace Carrito_C.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("ImagenArchivo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -174,6 +197,9 @@ namespace Carrito_C.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoriaId");
+
+                    b.HasIndex("Nombre")
+                        .IsUnique();
 
                     b.ToTable("Productos");
                 });
@@ -211,17 +237,18 @@ namespace Carrito_C.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagenArchivo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("TelefonoId")
-                        .HasColumnType("int");
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TelefonoId");
 
                     b.ToTable("Sucursales");
                 });
@@ -472,6 +499,14 @@ namespace Carrito_C.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.HasIndex("Dni")
+                        .IsUnique()
+                        .HasFilter("[Dni] IS NOT NULL");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
                     b.HasDiscriminator().HasValue("Persona");
                 });
 
@@ -488,6 +523,10 @@ namespace Carrito_C.Migrations
 
                     b.Property<long>("CUIT")
                         .HasColumnType("bigint");
+
+                    b.HasIndex("CUIT")
+                        .IsUnique()
+                        .HasFilter("[CUIT] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("Cliente");
                 });
@@ -515,8 +554,8 @@ namespace Carrito_C.Migrations
             modelBuilder.Entity("Carrito_C.Models.Carrito", b =>
                 {
                     b.HasOne("Carrito_C.Models.Cliente", "Cliente")
-                        .WithOne("Carrito")
-                        .HasForeignKey("Carrito_C.Models.Carrito", "Id")
+                        .WithMany("Carritos")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -556,17 +595,28 @@ namespace Carrito_C.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Carrito_C.Models.Sucursal", "Sucursal")
-                        .WithMany()
-                        .HasForeignKey("SucursalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Carrito");
 
                     b.Navigation("Cliente");
+                });
 
-                    b.Navigation("Sucursal");
+            modelBuilder.Entity("Carrito_C.Models.ComprasItem", b =>
+                {
+                    b.HasOne("Carrito_C.Models.Compra", "Compra")
+                        .WithMany("ComprasItems")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Carrito_C.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("Producto");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Direccion", b =>
@@ -608,15 +658,6 @@ namespace Carrito_C.Migrations
                     b.Navigation("Producto");
 
                     b.Navigation("Sucursal");
-                });
-
-            modelBuilder.Entity("Carrito_C.Models.Sucursal", b =>
-                {
-                    b.HasOne("Carrito_C.Models.Telefono", "Telefono")
-                        .WithMany()
-                        .HasForeignKey("TelefonoId");
-
-                    b.Navigation("Telefono");
                 });
 
             modelBuilder.Entity("Carrito_C.Models.Telefono", b =>
@@ -706,6 +747,11 @@ namespace Carrito_C.Migrations
                     b.Navigation("Productos");
                 });
 
+            modelBuilder.Entity("Carrito_C.Models.Compra", b =>
+                {
+                    b.Navigation("ComprasItems");
+                });
+
             modelBuilder.Entity("Carrito_C.Models.Producto", b =>
                 {
                     b.Navigation("ProductoSucursales");
@@ -718,7 +764,7 @@ namespace Carrito_C.Migrations
 
             modelBuilder.Entity("Carrito_C.Models.Cliente", b =>
                 {
-                    b.Navigation("Carrito");
+                    b.Navigation("Carritos");
 
                     b.Navigation("Compras");
 

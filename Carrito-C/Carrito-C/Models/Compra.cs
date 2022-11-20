@@ -20,11 +20,18 @@ namespace Carrito_C.Models
         public Carrito Carrito { get; set; }
 
         [DataType(DataType.Currency)]
-        public int Total { get; set; }
+        public double Total{get; set; }
+
+        public List<ComprasItem> ComprasItems { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [Display(Name = Alias.SucursalId)]
+        [DataType(DataType.Date)]
+        [Display(Name = Alias.FechaDeCompra)]
+        public DateTime FechaCompra { get; set; } = DateTime.Now;
+
         public int SucursalId { get; set; }
+
         public Sucursal Sucursal { get; set; }
+
     }
 }

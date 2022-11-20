@@ -7,174 +7,141 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Carrito_C.Controllers
 {
     public class ComprasController : Controller
     {
         private readonly CarritoCContext _context;
+        private readonly UserManager<Persona> _usermanager;
 
-        public ComprasController(CarritoCContext context)
+        public ComprasController(UserManager<Persona> usermanager, CarritoCContext context)
         {
             _context = context;
+            _usermanager = usermanager;
         }
 
-        // GET: Compras
-        public async Task<IActionResult> Index()
+        // Realiza la compra luego de elegir la sucursal
+        public async Task<IActionResult> RealizarCompra(int sucursalId)
         {
-            var carritoCContext = _context.Compras.Include(c => c.Carrito).Include(c => c.Cliente).Include(c => c.Sucursal);
-            return View(await carritoCContext.ToListAsync());
-        }
-
-        // GET: Compras/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Compras == null)
-            {
-                return NotFound();
-            }
-
-            var compra = await _context.Compras
-                .Include(c => c.Carrito)
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Cliente cliente = await _context.Clientes.Where(c => c.Id == userId)
+                .FirstOrDefaultAsync();
+            Carrito carrito = await _context.Carritos.Where(c => c.ClienteId == userId)
                 .Include(c => c.Cliente)
-                .Include(c => c.Sucursal)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (compra == null)
+                .Include(c => c.CarritoItems)
+                .ThenInclude(c => c.Producto)
+                .FirstOrDefaultAsync();
+            Sucursal sucursal = await _context.Sucursales
+                .Where(s => s.Id == sucursalId)
+                .Include(s => s.ProductosSucursal)
+                .FirstOrDefaultAsync();
+
+            if (carrito != null && carrito.CarritoItems.Count() > 0)
             {
-                return NotFound();
-            }
-
-            return View(compra);
-        }
-
-        // GET: Compras/Create
-        public IActionResult Create()
-        {
-            ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId");
-            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido");
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion");
-            return View();
-        }
-
-        // POST: Compras/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClienteId,CarritoId,Total,SucursalId")] Compra compra)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(compra);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
-            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
-            return View(compra);
-        }
-
-        // GET: Compras/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Compras == null)
-            {
-                return NotFound();
-            }
-
-            var compra = await _context.Compras.FindAsync(id);
-            if (compra == null)
-            {
-                return NotFound();
-            }
-            ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
-            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
-            return View(compra);
-        }
-
-        // POST: Compras/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClienteId,CarritoId,Total,SucursalId")] Compra compra)
-        {
-            if (id != compra.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                bool hayStock = ValidarStock(carrito, sucursal);
+                if (hayStock)
                 {
-                    _context.Update(compra);
+                    Compra compra = new Compra()
+                    {
+                        ClienteId = userId,
+                        Cliente = cliente,
+                        CarritoId = carrito.Id,
+                        SucursalId = sucursal.Id,
+                        Sucursal = sucursal
+                    };
+                    await AgregarCompra(compra);
+
+                    foreach (CarritoItem carritoItem in _context.CarritoItems.Where(i => i.CarritoId == carrito.Id))
+                    {
+                        ComprasItem compraItem = new ComprasItem()
+                        {
+                            CompraId = compra.Id,
+                            Compra = compra,
+                            ProductoId = carritoItem.ProductoId,
+                            Producto = carritoItem.Producto,
+                            Cantidad = carritoItem.Cantidad,
+                            Subtotal = carritoItem.Subtotal,
+                        };
+                        _context.ComprasItems.Add(compraItem);
+                        _context.CarritoItems.Remove(carritoItem);
+                    }
+                    compra.Total = CalcularTotal(compra);
+                    _context.Carritos.Update(carrito);
+                    _context.Compras.Update(compra);
+                    ViewBag.Compra = compra;
                     await _context.SaveChangesAsync();
+                    return View("ResumenCompra", compra.ComprasItems);
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CompraExists(compra.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    List<Sucursal> sucursales = BuscarSucursalesConStock(carrito);
+                    ViewBag.hayStock = hayStock;
+                    return View("SeleccionLocal", sucursales);
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CarritoId"] = new SelectList(_context.Carritos, "ClienteId", "ClienteId", compra.CarritoId);
-            ViewData["Id"] = new SelectList(_context.Clientes, "Id", "Apellido", compra.Id);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", compra.SucursalId);
-            return View(compra);
+            else
+            {
+                return View("Error");
+            }
         }
 
-        // GET: Compras/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        private List<Sucursal> BuscarSucursalesConStock(Carrito carrito)
         {
-            if (id == null || _context.Compras == null)
+            List<Sucursal> allSucursales = _context.Sucursales
+                .Include(s => s.ProductosSucursal).ToList();
+            List<Sucursal> sucursalesConStock = new List<Sucursal>();
+            foreach (Sucursal sucursal in allSucursales)
             {
-                return NotFound();
+                if (ValidarStock(carrito, sucursal))
+                {
+                    sucursalesConStock.Add(sucursal);
+                }
             }
-
-            var compra = await _context.Compras
-                .Include(c => c.Carrito)
-                .Include(c => c.Cliente)
-                .Include(c => c.Sucursal)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (compra == null)
-            {
-                return NotFound();
-            }
-
-            return View(compra);
+            return sucursalesConStock;
         }
 
-        // POST: Compras/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        private double CalcularTotal(Compra compra)
         {
-            if (_context.Compras == null)
+            double total = 0;
+            foreach (ComprasItem item in compra.ComprasItems)
             {
-                return Problem("Entity set 'CarritoCContext.Compras'  is null.");
+                total += item.Subtotal;
             }
-            var compra = await _context.Compras.FindAsync(id);
-            if (compra != null)
+            return total;
+        }
+
+        private bool ValidarStock(Carrito carrito, Sucursal sucursal)
+        {
+            bool stockOk = true;
+            foreach (CarritoItem item in carrito.CarritoItems)
             {
-                _context.Compras.Remove(compra);
+                StockItem stock = sucursal.ProductosSucursal.FirstOrDefault(s => s.ProductoId == item.ProductoId);
+                if (stock.Cantidad < item.Cantidad)
+                {
+                    stockOk = false;
+                }
             }
-            
+            return stockOk;
+        }
+
+        private async Task AgregarCompra(Compra compra)
+        {
+            _context.Compras.Add(compra);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
-        private bool CompraExists(int id)
+        // Muestra todas las sucursales disponibles
+        [Authorize(Roles = ("Cliente"))]
+        public IActionResult SeleccionLocal()
         {
-          return _context.Compras.Any(e => e.Id == id);
+            var sucursales = _context.Sucursales.ToList();
+            return View("SeleccionLocal", sucursales);
         }
+
     }
+
 }

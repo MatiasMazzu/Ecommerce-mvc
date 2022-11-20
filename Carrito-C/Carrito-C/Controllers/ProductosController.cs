@@ -11,43 +11,27 @@ using Carrito_C.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace Carrito_C.Controllers
 {
     public class ProductosController : Controller
     {
         private readonly CarritoCContext _context;
-        private readonly UserManager<Persona> _usermanager;
 
-        public ProductosController(UserManager<Persona> usermanager, CarritoCContext context)
+
+        public ProductosController(CarritoCContext context)
         {
             _context = context;
-            _usermanager = usermanager;
+        }
+
+        public async Task<IActionResult> ProductosPorCategoria(int id)
+        {
+            var carritoCContext = _context.Productos.Include(p => p.Categoria).Where(p => p.CategoriaId == id);
+            return View("../Home/Index", await carritoCContext.ToListAsync());
         }
 
         // GET: Productos
-        public async Task<IActionResult> AgregarAlCarrito(int id)
-        {
-            Producto producto = await _context.Productos.FindAsync(id);
-            Cliente cliente = await _context.Clientes.FindAsync(Int32.Parse(_usermanager.GetUserId(User)));
-            Carrito carrito = cliente.Carrito;
-            CarritoItem carritoItem = new CarritoItem(producto, carrito, 1);
-            carrito.CarritoItems.Add(carritoItem);
-            carrito.Subtotal += carritoItem.Subtotal;
-            try
-            {
-                _context.Update(carrito);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                
-                    throw;
-            }
-
-
-            return RedirectToAction("Index");
-        }
         public async Task<IActionResult> Index()
         {
             var carritoCContext = _context.Productos.Include(p => p.Categoria);
@@ -92,9 +76,29 @@ namespace Carrito_C.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(producto);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbex)
+                {
+                    SqlException innerException = dbex.InnerException as SqlException;
+                    if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
+                    {
+                        ModelState.AddModelError("Nombre", MsgError.NombreExistente);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbex.Message);
+                    }
+                }
+
             }
+            return View(producto);
+
+        
+            
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion", producto.CategoriaId);
             return View(producto);
         }

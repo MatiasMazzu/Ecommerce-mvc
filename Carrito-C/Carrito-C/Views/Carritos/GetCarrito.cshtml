@@ -1,0 +1,73 @@
+﻿@using Carrito_C.Helpers
+@model IEnumerable<Carrito_C.Models.CarritoItem>
+@inject Carrito_C.Data.CarritoCContext _context
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+<div class="container">
+    @if (Model != null && Model.Count() > 0)
+    {
+        double total = 0;
+        <h3 class="text-center text-uppercase">Carrito de compras</h3>
+        <table class="table table-striped table-hover">
+            <tr>
+                <th scope="col" style="width: 16.66%">Producto</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio unitario</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col"></th>
+
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img class="card-img-top img-fluid" src="~/img/product/@Html.DisplayFor(c => item.Producto.ImagenArchivo)" alt="Producto imagen">
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Producto.Nombre)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ValorUnitario)</td>
+                    <td>
+                        <a class="btn btn-secondary"
+                   asp-action="AgregarAlCarrito" asp-controller="Carritos" asp-route-productoId="@item.Producto.Id"> + </a>
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                         <a class="btn btn-secondary"
+                   asp-action="RestarDelCarrito" asp-controller="Carritos" asp-route-productoId="@item.Producto.Id"> - </a>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Subtotal)</td>
+                    <td>
+                        <a class="btn btn-info" asp-action="EliminarProducto" asp-controller="Carritos" asp-route-itemId=@item.Id>Eliminar</a>
+                    </td>
+                </tr>
+                total += item.Subtotal;
+            }
+        </table>
+        <div class="alert alert-dark text-lg-start" role="alert">
+            @(((decimal)total).ToString("C2"))
+        </div>
+        <div class="container mt-4 mb-4">
+            <a class="btn btn-info"
+               asp-action="VaciarCarrito" asp-controller="Carritos">
+                <i class="bi bi-cart-x"></i> Vaciar Carrito
+            </a>
+            <a class="btn btn-info"
+           asp-action="SeleccionLocal" asp-controller="Compras" asp-route-carritoId="@Model.FirstOrDefault().CarritoId">
+                <i class="bi bi-bag-check"></i> Selecciona la sucursal
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            No hay productos en el carrito
+        </div>
+    }
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary text-uppercase" asp-action="Index" asp-controller="Home">
+            Volver al Inicio
+        </a>
+    </p>
+</div>

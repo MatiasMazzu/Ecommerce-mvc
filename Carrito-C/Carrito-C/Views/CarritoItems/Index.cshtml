@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Carrito_C.Models.Carrito>
+﻿@model IEnumerable<Carrito_C.Models.CarritoItem>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,13 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Activo)
+                @Html.DisplayNameFor(model => model.Carrito)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cliente)
+                @Html.DisplayNameFor(model => model.Producto)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CarritoItems)
+                @Html.DisplayNameFor(model => model.ValorUnitario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cantidad)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Subtotal)
@@ -31,11 +34,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Activo)
+                @Html.DisplayFor(modelItem => item.Carrito.Id)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Cliente.UserName)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ValorUnitario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Subtotal)
             </td>

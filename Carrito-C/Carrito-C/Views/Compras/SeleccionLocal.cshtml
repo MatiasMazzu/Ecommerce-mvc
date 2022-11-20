@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Carrito_C.Models.Sucursal>;
+
+<div class="container">
+	@if (Model != null && Model.Count() > 0)
+	{
+		<h3 class="text-center text-uppercase">Seleccione un local</h3>
+		@if (@ViewBag.hayStock == null)
+		{
+			<div class="row mt-4">
+				@foreach (var local in Model)
+				{
+					<div class="col-md-4 col-lg-3">
+						<div class="card m-1">
+							<div class="card-body">
+								<img class="card-img-top img-fluid" src="~/img/locales/@local.ImagenArchivo" alt="Producto imagen">
+								<h5 class="card-title text-center text-uppercase">@local.Nombre</h5>
+								<a class="btn btn-info" asp-action="RealizarCompra" asp-controller="Compras"
+					   asp-route-sucursalId=@local.Id>
+									Seleccionar
+								</a>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="container">
+				<div class="alert alert-warning text-center" role="alert">
+					La sucursal que seleccionó no cuenta con stock. Puede elegir entre las siguientes sucursales:
+				</div>
+			</div>
+			@foreach (var local in Model)
+			{
+				<div class="col-md-4 col-lg-3">
+						<div class="card m-1">
+							<div class="card-body">
+								<img class="card-img-top img-fluid" src="~/img/locales/@local.ImagenArchivo" alt="Producto imagen">
+								<h5 class="card-title text-center text-uppercase">@local.Nombre</h5>
+								<a class="btn btn-info" asp-action="RealizarCompra" asp-controller="Compras"
+					   asp-route-sucursalId=@local.Id>
+									Seleccionar
+								</a>
+							</div>
+						</div>
+					</div>
+			}
+		}
+	}
+	else
+	{
+		if (@ViewBag.hayStock == null)
+		{
+			<div class="alert alert-warning text-center" role="alert">
+				Disculpe, en este momento no disponemos de sucursales para retirar su compra
+			</div>
+		}
+		else
+		{
+			<div class="alert alert-warning text-center" role="alert">
+				Disculpe, en este momento no disponemos de sucursales con stock para retirar su compra
+			</div>
+		}
+	}
+	<div class="container mt-4">
+		<a class="btn btn-info" asp-action="GetCarrito" asp-controller="Carritos">
+			<i class="bi bi-bag"></i> Regresar al Carrito
+		</a>
+	</div>
+</div>

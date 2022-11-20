@@ -1,25 +1,13 @@
 ﻿using Carrito_C.Helpers;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Carrito_C.Models
 {
     public class CarritoItem
     {
-        public CarritoItem()
-        {
+        public CarritoItem(){}
 
-        }
-        public CarritoItem(Producto producto,Carrito carrito, int cantidad)
-        {
-            Carrito = carrito;
-            CarritoId = carrito.Id;
-            Producto = producto;
-            ProductoId = producto.Id;
-            ValorUnitario = producto.PrecioVigente;
-            Cantidad = cantidad;
-            Subtotal = ValorUnitario * cantidad;
-
-        }
         public int Id { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
@@ -33,16 +21,32 @@ namespace Carrito_C.Models
         public Producto Producto { get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
-        [DataType(DataType.Currency)]
-        public int ValorUnitario { get; set; }
-
-        [Required(ErrorMessage = MsgError.Requerido)]
         [Range(Validaciones.CantidadMinInt, Validaciones.CantidadMaxInt, ErrorMessage = MsgError.CommonError2)]
         public int Cantidad { get; set; }
 
-        
+        [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.Currency)]
-        public int Subtotal { get; set; }
+        public double ValorUnitario { 
+            get 
+            {
+                double valor = 0;
+                if (Producto != null)
+                {
+                    valor = Producto.PrecioVigente;
+                }
+                return valor;
+            } 
+        }
+
+        [NotMapped]
+        [DataType(DataType.Currency)]
+        public double Subtotal
+        {
+            get
+            {
+                return Cantidad * ValorUnitario;
+            }
+        }
 
     }        
  

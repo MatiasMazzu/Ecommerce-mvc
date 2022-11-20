@@ -18,7 +18,8 @@
         public const string CategoriaId = "Categoria";
         public const string RoleName = "Nombre";
         public const string ConfirmPassword = "Confirmacion Contraseña";
-
+        public const string ImagenArchivo = "Nombre de la imagen";
+        public const string FechaDeCompra = "Fecha de la compra";
 
     }
 }

@@ -10,17 +10,23 @@ using Carrito_C.Models;
 using Carrito_C.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace Carrito_C.Controllers
 {
+    [Authorize]
     public class StockItemsController : Controller
     {
+        private readonly UserManager<Persona> _usermanager;
+        private readonly RoleManager<Rol> _rolManager;
         private readonly CarritoCContext _context;
-
-        public StockItemsController(CarritoCContext context)
-        {
-            _context = context;
-        }
+    
+    public StockItemsController(UserManager<Persona> usermanager, RoleManager<Rol> rolManager, CarritoCContext contexto)
+    {
+        this._usermanager = usermanager;
+        this._rolManager = rolManager;
+        this._context = contexto;
+    }
 
         // GET: StockItems
         public async Task<IActionResult> Index()
