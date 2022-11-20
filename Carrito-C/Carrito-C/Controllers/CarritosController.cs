@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace Carrito_C.Controllers
 {
@@ -133,6 +131,8 @@ namespace Carrito_C.Controllers
             return RedirectToAction(nameof(GetCarrito));
 
         }
+
+        [Authorize(Roles = ("Cliente"))]
         public async Task<IActionResult> EliminarProducto(int itemId)
         {
             CarritoItem item = _context.CarritoItems.FirstOrDefault(i => i.Id == itemId);

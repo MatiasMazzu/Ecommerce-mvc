@@ -24,6 +24,7 @@ namespace Carrito_C.Controllers
             _usermanager = usermanager;
         }
 
+        [Authorize(Roles = ("Cliente"))]
         // Realiza la compra luego de elegir la sucursal
         public async Task<IActionResult> RealizarCompra(int sucursalId)
         {
@@ -89,6 +90,7 @@ namespace Carrito_C.Controllers
             }
         }
 
+        // Si no existe sucursal, este método devuelve las sucursales con stock disponible
         private List<Sucursal> BuscarSucursalesConStock(Carrito carrito)
         {
             List<Sucursal> allSucursales = _context.Sucursales
@@ -104,6 +106,7 @@ namespace Carrito_C.Controllers
             return sucursalesConStock;
         }
 
+        // Calcula el total de la compra para luego guardarlo en la db
         private double CalcularTotal(Compra compra)
         {
             double total = 0;
@@ -114,6 +117,7 @@ namespace Carrito_C.Controllers
             return total;
         }
 
+        // Verifica que exista stock en la sucursal seleccionada
         private bool ValidarStock(Carrito carrito, Sucursal sucursal)
         {
             bool stockOk = true;

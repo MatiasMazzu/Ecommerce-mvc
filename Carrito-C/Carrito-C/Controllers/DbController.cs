@@ -744,6 +744,8 @@ namespace Carrito_C.Controllers
                 Nombre = "Empleado",
                 Apellido = "Empleado",
                 Dni = 11111112,
+                Direccion = "Direccion cliente",
+                Telefono = "1122334455",
                 UserName = "Empleado@ort.edu.ar",
                 Email = "Empleado@ort.edu.ar"
             };
@@ -763,6 +765,8 @@ namespace Carrito_C.Controllers
                 Nombre = "Cliente",
                 Apellido = "Cliente",
                 Dni = 11111113,
+                Direccion = "Direccion cliente",
+                Telefono = "1122334455",
                 UserName = "Cliente@ort.edu.ar",
                 Email = "Cliente@ort.edu.ar"
             };
@@ -785,6 +789,8 @@ namespace Carrito_C.Controllers
                 Nombre = "Admin",
                 Apellido = "Admin",
                 Dni = 11111111,
+                Direccion = "Direccion admin",
+                Telefono = "1122334455",
                 UserName = "admin@ort.edu.ar",
                 Email = "admin@ort.edu.ar"
             };
