@@ -9,14 +9,14 @@ using System.Runtime.Serialization;
 
 namespace Carrito_C.Controllers
 {
-    public class Precarga : Controller
+    public class DbController : Controller
     {
         private readonly UserManager<Persona> _userManager;
         private readonly RoleManager<Rol> _roleManager;
         private readonly CarritoCContext _context;
 
         private List<String> roles = new List<String>() { Configs.AdminRolName, Configs.ClienteRolName, Configs.EmpleadoRolName };
-        public Precarga(UserManager<Persona> userManager, RoleManager<Rol> roleManager, CarritoCContext context)
+        public DbController(UserManager<Persona> userManager, RoleManager<Rol> roleManager, CarritoCContext context)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
