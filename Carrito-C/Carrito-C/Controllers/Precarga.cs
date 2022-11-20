@@ -32,7 +32,7 @@ namespace Carrito_C.Controllers
             CrearSucursales().Wait();
             CrearCategorias().Wait();
             CrearProductos().Wait();
-            CrearStockItem().Wait();
+            CrearStockItem().Wait(); 
 
             return RedirectToAction("Index", "Home", new { mensaje = "Proceso Seed finalizado" });
         }
