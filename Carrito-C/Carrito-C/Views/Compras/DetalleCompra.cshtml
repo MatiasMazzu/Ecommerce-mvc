@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Carrito_C.Models.ComprasItem>;
+
+<div class="container">
+
+
+	<h1 class="text-center mb-4">Detalle de compra</h1>
+	<table class="table table-striped">
+		<tr>
+			<th scope="col">Descripción</th>
+			<th scope="col">Precio Unitario</th>
+			<th scope="col">Cantidad</th>
+			<th scope="col">Subtotal</th>
+		</tr>
+		@foreach (var item in Model)
+		{
+			double precioUnitario = @item.Subtotal / @item.Cantidad;
+			<tr>
+				<td>@Html.DisplayFor(modelItem => item.Producto.Nombre)</td>
+				<td>@(((decimal)precioUnitario).ToString("C2"))
+				<td>@Html.DisplayFor(modelItem => item.Cantidad)</td>
+				<td>@Html.DisplayFor(modelItem => item.Subtotal)</td>
+
+			</tr>
+
+		}
+	</table>
+
+	<div class="alert alert-success text-center" role="alert">
+		Total: @(((decimal)ViewBag.Total).ToString("C2"))
+	</div>
+	<a type="button" class="btn btn-secondary text-uppercase" asp-action="ClienteCompras">
+		Regresar <i class="bi bi-arrow-return-left"></i></a>
+</div>

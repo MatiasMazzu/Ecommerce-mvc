@@ -23,9 +23,15 @@ namespace Carrito_C.Models
         [Display(Name = Alias.Dni)]
         public int Dni { get; set; }
 
-        public Telefono Telefono{ get; set; }
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [Display(Name = Alias.Telefono)]
+        [RegularExpression(Validaciones.RegexTelefono, ErrorMessage = MsgError.Telefono)]
+        public string Telefono { get; set; }
 
-        public Direccion Direccion { get; set; }
+        [Required(ErrorMessage = MsgError.Requerido)]
+        [StringLength(Validaciones.DireccionMaxString, MinimumLength = Validaciones.DireccionMinString, ErrorMessage = MsgError.UserName)]
+        [Display(Name = Alias.Direccion)]
+        public string Direccion{ get; set; }
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [EmailAddress(ErrorMessage = MsgError.MsgEmail)]
