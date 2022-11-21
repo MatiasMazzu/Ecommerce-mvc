@@ -2,6 +2,7 @@
 using Carrito_C.Data;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Carrito_C.Controllers
 {
@@ -16,13 +17,13 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
-        // GET: Muestra todos los productos
-        public IActionResult Index()
+        // Muestra todos los productos del mes
+        public async Task<IActionResult> Index()
         {
             ViewBag.ReturnUrl = HttpContext.Request.Path.ToString();
-            var productos = _context.Productos
-                .Where(p => p.Activo == true)
-                .ToList();
+            var productos = await _context.Productos
+                .Where(p => p.ProductoDelMes == true)
+                .ToListAsync();
             return View(productos);
         }
 
@@ -33,7 +34,7 @@ namespace Carrito_C.Controllers
             return View(sucursales);
         }
 
-        public IActionResult AboutUs()
+        public IActionResult SobreNosotros()
         {
             return View();
         }

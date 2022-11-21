@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Carrito_C.Models.Producto>;
+@using Carrito_C.Helpers
 @inject Microsoft.AspNetCore.Identity.UserManager<Persona> userManager
 @inject Microsoft.AspNetCore.Identity.SignInManager<Persona> signInManager
 @{
@@ -16,7 +17,7 @@
             <div class="col-md-4 col-lg-3">
 
                 <div class="card m-1">
-                    <img class="card-img-top img-fluid" src="~/img/productos/@item.ImagenArchivo" alt="Card image cap" height="400" width="400">
+                    <img class="card-img-top img-fluid" src="~/img/product/@item.ImagenArchivo" alt="Card image cap" height="400" width="400">
                     <div class="card-body">
                         <h5 class="card-title">@item.Nombre</h5>
                         <p class="card-text">@item.Descripcion.</p>
@@ -27,7 +28,7 @@
                         }
                         else
                         {
-                            if (!signInManager.IsSignedIn(User) || User.IsInRole("Cliente"))
+                            if (!signInManager.IsSignedIn(User) || User.IsInRole(Configs.AdminRolName))
                             {
                                 <a class="btn btn-primary btn-block text-uppercase" asp-action="AgregarAlCarrito" asp-controller="Carritos"
                    asp-route-productoId=@item.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
@@ -45,7 +46,7 @@ else
 {
     <div class="container">
         <div class="alert alert-warning text-center" role="alert">
-            No hay productos
+            No hay productos disponibles
         </div>
     </div>
 }
