@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@using Carrito_C.Helpers
 @inject Microsoft.AspNetCore.Identity.UserManager<Persona> userManager
 @inject Microsoft.AspNetCore.Identity.SignInManager<Persona> signInManager
 @model IEnumerable<Carrito_C.Models.Producto>;
@@ -20,13 +20,13 @@
                         <h5 class="card-title">@Html.DisplayFor(modelItem => productos.Nombre)</h5>
                         <p class="card-text">@Html.DisplayFor(modelItem => productos.Descripcion).</p>
                         <p class="card-text">Precio: @Html.DisplayFor(modelItem => productos.PrecioVigente)</p>
-                        @if ((!signInManager.IsSignedIn(User) || User.IsInRole("Cliente")) && productos.Activo == false)
+                        @if ((!signInManager.IsSignedIn(User) || User.IsInRole(Configs.ClienteRolName)) && productos.Activo == false)
                         {
                             <button class="btn btn-primary btn-block" disabled><i class="bi bi-bag-x"></i> No disponible</button>
                         }
                         else
                         {
-                            if (User.IsInRole("Cliente") || !signInManager.IsSignedIn(User))
+                            if (User.IsInRole(Configs.ClienteRolName) || !signInManager.IsSignedIn(User))
                             {
                                 <a class="btn btn-primary btn-block" asp-action="AgregarAlCarrito" asp-controller="Carritos"
                                     asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>

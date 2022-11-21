@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Carrito_C.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<h3 class="text-center text-uppercase">Productos</h3>
+<table class="table table-striped table-hover">
+    <tr>
+        <th scope="col" style="width: 16.66%">Producto</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Precio vigente</th>
+        <th scope="col">Activo</th>
+        <th scope="col">Producto del mes</th>
+        <th scope="col">Categoría</th>
+        <th scope="col">Modificar</th>
+        <th scope="col"></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img class="card-img-top img-fluid" src="~/img/product/@Html.DisplayFor(c => item.ImagenArchivo)" alt="Producto imagen">
+            </td>
+            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+            <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+            <td>@Html.DisplayFor(modelItem => item.PrecioVigente)</td>
+            <td>@(item.Activo ? "Si" : "No")</td>
+            <td>@(item.ProductoDelMes ? "Si" : "No")</td>
+            <td>@Html.DisplayFor(modelItem => item.Categoria.Descripcion)</td>
+            <td>
+               <a class="btn btn-sm @(item.Activo ? "btn-danger" : "btn-primary") m-1" asp-action="CambiarEstado" asp-route-id="@item.Id">@(item.Activo ? "Desactivar" : "Activar")</a>
+                <a class="btn btn-sm btn btn-info m-1" asp-action="Editar" asp-route-id="@item.Id">Editar</a>
+            </td>
+        </tr>
+    }
+</table>

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Carrito_C.Models.Producto>;
+@using Carrito_C.Helpers
 @inject Microsoft.AspNetCore.Identity.UserManager<Persona> userManager
 @inject Microsoft.AspNetCore.Identity.SignInManager<Persona> signInManager
 @{
@@ -27,7 +28,7 @@
                         }
                         else
                         {
-                            if (!signInManager.IsSignedIn(User) || User.IsInRole("Cliente"))
+                            if (!signInManager.IsSignedIn(User) || User.IsInRole(Configs.AdminRolName))
                             {
                                 <a class="btn btn-primary btn-block text-uppercase" asp-action="AgregarAlCarrito" asp-controller="Carritos"
                    asp-route-productoId=@item.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
