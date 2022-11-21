@@ -95,6 +95,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 12500,
                 Activo = true,
                 Categoria = mujer,
+                ProductoDelMes = false,
                 ImagenArchivo = "dama1.1.png"
             };
             Producto producto2 = new Producto()
@@ -104,6 +105,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 13000,
                 Activo = true,
                 Categoria = mujer,
+                ProductoDelMes = true,
                 ImagenArchivo = "dama2.1.png"
             };
             Producto producto3 = new Producto()
@@ -113,6 +115,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 11000,
                 Activo = true,
                 Categoria = mujer,
+                ProductoDelMes = false,
                 ImagenArchivo = "dama3.3.png"
             };
             Producto producto4 = new Producto()
@@ -120,8 +123,9 @@ namespace Carrito_C.Controllers
                 Nombre = "Ardidas 2022",
                 Descripcion = "Zapatillas de running para mujer",
                 PrecioVigente = 16000,
-                Activo = true,
+                Activo = false,
                 Categoria = mujer,
+                ProductoDelMes = false,
                 ImagenArchivo = "dama4.1.jpg"
             };
             Producto producto5 = new Producto()
@@ -131,6 +135,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 22000,
                 Activo = true,
                 Categoria = mujer,
+                ProductoDelMes = false,
                 ImagenArchivo = "dama5.1.png"
             };
             Producto producto6 = new Producto()
@@ -140,6 +145,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 28000,
                 Activo = true,
                 Categoria = mujer,
+                ProductoDelMes = true,
                 ImagenArchivo = "dama6.1.png"
             };
             Producto producto7 = new Producto()
@@ -149,6 +155,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 22000,
                 Activo = true,
                 Categoria = hombre,
+                ProductoDelMes = true,
                 ImagenArchivo = "hombre1.1.png"
             };
             Producto producto8 = new Producto()
@@ -156,8 +163,9 @@ namespace Carrito_C.Controllers
                 Nombre = "Ribuk Air Max",
                 Descripcion = "Zapatillas de running para hombre",
                 PrecioVigente = 21000,
-                Activo = true,
+                Activo = false,
                 Categoria = hombre,
+                ProductoDelMes = false,
                 ImagenArchivo = "hombre2.1.jpg"
             };
             Producto producto9 = new Producto()
@@ -167,6 +175,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 19500,
                 Activo = true,
                 Categoria = hombre,
+                ProductoDelMes = true,
                 ImagenArchivo = "hombre3.1.jpg"
             };
             Producto producto10 = new Producto()
@@ -176,6 +185,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 17500,
                 Activo = true,
                 Categoria = hombre,
+                ProductoDelMes = false,
                 ImagenArchivo = "hombre4.1.png"
             };
             Producto producto11 = new Producto()
@@ -185,6 +195,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 21500,
                 Activo = true,
                 Categoria = hombre,
+                ProductoDelMes = false,
                 ImagenArchivo = "hombre5.1.jpg"
             };
             Producto producto12 = new Producto()
@@ -194,6 +205,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 28500,
                 Activo = true,
                 Categoria = hombre,
+                ProductoDelMes = false,
                 ImagenArchivo = "hombre6.1.png"
             };
             Producto producto13 = new Producto()
@@ -203,6 +215,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 12500,
                 Activo = true,
                 Categoria = ninios,
+                ProductoDelMes = false,
                 ImagenArchivo = "ninios1.1.png"
             };
             Producto producto14 = new Producto()
@@ -212,6 +225,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 14500,
                 Activo = true,
                 Categoria = ninios,
+                ProductoDelMes = true,
                 ImagenArchivo = "ninios2.1.png"
             };
             Producto producto15 = new Producto()
@@ -221,6 +235,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 12500,
                 Activo = true,
                 Categoria = ninios,
+                ProductoDelMes = false,
                 ImagenArchivo = "ninios3.1.jpg"
             };
             Producto producto16 = new Producto()
@@ -230,6 +245,7 @@ namespace Carrito_C.Controllers
                 PrecioVigente = 11000,
                 Activo = true,
                 Categoria = ninios,
+                ProductoDelMes = false,
                 ImagenArchivo = "ninios4.1.png"
             };
             _context.Update(producto1);

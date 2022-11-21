@@ -25,36 +25,32 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> ProductosPorCategoria(int id)
+        [AllowAnonymous]
+        public async Task<IActionResult> ProductosPorCategoria(int? id)
         {
-            var carritoCContext = _context.Productos.Include(p => p.Categoria).Where(p => p.CategoriaId == id);
-            return View("../Home/Index", await carritoCContext.ToListAsync());
-        }
-
-        // GET: Productos
-        public async Task<IActionResult> Index()
-        {
-            var carritoCContext = _context.Productos.Include(p => p.Categoria);
-            return View(await carritoCContext.ToListAsync());
-        }
-
-        // GET: Productos/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Productos == null)
+            if (id != null)
             {
-                return NotFound();
-            }
+                var categoria = await _context.Categorias
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            var producto = await _context.Productos
-                .Include(p => p.Categoria)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (producto == null)
+                if (categoria != null)
+                {
+                    var productos = await _context.Productos
+                    .Where(p => p.CategoriaId == id)
+                    .Include(p => p.Categoria)
+                    .ToListAsync();
+                    ViewBag.ReturnUrl = HttpContext.Request.Path.ToString();
+                    return View(productos);
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+            else
             {
-                return NotFound();
+                return View("Error");
             }
-
-            return View(producto);
         }
 
         // GET: Productos/Create
