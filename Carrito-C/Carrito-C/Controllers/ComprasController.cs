@@ -173,6 +173,22 @@ namespace Carrito_C.Controllers
             return View(productosComprados);
         }
 
+        [Authorize(Roles = Configs.EmpleadoRolName)]
+        public async Task<IActionResult> ComprasDelMes(int compraId)
+        {
+            DateTime fechaNow = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Date.Day);
+            List<Compra> comprasDelMes = await _context.Compras
+                .Where(c => c.FechaCompra.Year == fechaNow.Year
+                && c.FechaCompra.Month == fechaNow.Month)
+                .Include(c => c.Sucursal)
+                .Include(c => c.Cliente)
+                .OrderByDescending(c => c.Total)
+                .ToListAsync();
+
+            return View(comprasDelMes);
+                
+        }
+
     }
 
 }
