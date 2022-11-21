@@ -5,6 +5,8 @@ using Carrito_C.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -17,56 +19,65 @@ namespace Carrito_C.Controllers
         private readonly SignInManager<Persona> _signInManager;
         private readonly RoleManager<Rol> _rolManager;
         private readonly CarritoCContext _context;
-               
+
         public AccountController(UserManager<Persona> usermanager,
             SignInManager<Persona> signInManager, RoleManager<Rol> rolManager, CarritoCContext contexto)
         {
-            this._usermanager = usermanager; 
+            this._usermanager = usermanager;
             this._signInManager = signInManager;
             this._rolManager = rolManager;
             this._context = contexto;
         }
-        [Authorize(Roles = Configs.AdminRolName+","+Configs.EmpleadoRolName)]
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public IActionResult RegistrarEmpleado()
         {
+            ViewData["Roles"] = new SelectList(_context.Roles.Where(r => r.Name != "Cliente"));
             return View();
         }
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [HttpPost]
-        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido")] RegistroEmpleado viewmodel)
+        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido, Dni, Telefono, Rol")] RegistroEmpleado viewmodel)
         {
             if (ModelState.IsValid)
             {
-                Empleado empleadoACrear = new Empleado()
+                Empleado empleadoExistente = await _context.Empleados
+                    .FirstOrDefaultAsync(e => e.Dni == viewmodel.Dni);
+
+                if (empleadoExistente == null)
                 {
-                    Nombre = viewmodel.Nombre,
-                    Apellido = viewmodel.Apellido,
-                    UserName = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty),
-                    Email = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty)
-                };
-                var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, Configs.PasswordGenerica);
-                if (resultadoCreate.Succeeded)
-                {
-                    var resultadoAddRole = await _usermanager.AddToRoleAsync(empleadoACrear, Configs.EmpleadoRolName);
+                    Empleado empleadoACrear = new Empleado()
+                    {
+                        Nombre = viewmodel.Nombre,
+                        Apellido = viewmodel.Apellido,
+                        Dni = viewmodel.Dni,
+                        Telefono = viewmodel.Telefono,
+                        UserName = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty),
+                        Email = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty)
+                    };
+                    var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, Configs.PasswordGenerica);
                     if (resultadoCreate.Succeeded)
                     {
-                        await _signInManager.SignInAsync(empleadoACrear, isPersistent: false);
-                        return RedirectToAction("Index", "Home");
+                        var resultadoAddRole = await _usermanager.AddToRoleAsync(empleadoACrear, Configs.EmpleadoRolName);
+                        if (resultadoCreate.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(empleadoACrear, isPersistent: false);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                        }
                     }
-                    else
+                    foreach (var error in resultadoCreate.Errors)
                     {
-                        ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
-                }
-                foreach (var error in resultadoCreate.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
             return View(viewmodel);
 
         }
-     
+
         private static Cliente GetClienteACrear(RegistroUsuario viewmodel)
         {
             return new Cliente()
@@ -111,8 +122,8 @@ namespace Carrito_C.Controllers
             {
                 var searchCliente = _context.Clientes.FirstOrDefault(c => c.Dni == viewmodel.Dni);
                 var searchEmail = _context.Clientes.FirstOrDefault(c => c.Email == viewmodel.Email);
-                
-                if(searchEmail == null)
+
+                if (searchEmail == null)
                 {
                     if (searchCliente == null)
                     {
@@ -188,15 +199,16 @@ namespace Carrito_C.Controllers
             {
                 var resultado = await _signInManager.PasswordSignInAsync(viewmodel.Email, viewmodel.Password, isPersistent: viewmodel.Recordarme, false);
                 if (resultado.Succeeded)
-                {   
-                    if(viewmodel.productoId > 0)
+                {
+                    if (viewmodel.productoId > 0)
                     {
                         return RedirectToAction("AgregarAlCarrito", "Carritos", new { productoId = viewmodel.productoId });
-                    }else
+                    }
+                    else
                     {
                         return RedirectToAction("Index", "Home");
                     }
-                    
+
                 }
                 ModelState.AddModelError(String.Empty, "Algunos de los datos no es correcto");
             }
@@ -225,9 +237,9 @@ namespace Carrito_C.Controllers
                 // Otra opcion es buscar por ID y no Por el objeto "persona", voy al contexto de base de datos
                 int personaId = Int32.Parse(_usermanager.GetUserId(User));
                 // Por Claims devuelve un string con los claims
-                int personaId2 = Int32.Parse (User.FindFirstValue(ClaimTypes.NameIdentifier));
+                int personaId2 = Int32.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 //Hace lo mismo que personaId2 sale el claim completo
-                var personaId3 = User.Claims.FirstOrDefault(c => c.Type 
+                var personaId3 = User.Claims.FirstOrDefault(c => c.Type
                 == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             }
             return null;

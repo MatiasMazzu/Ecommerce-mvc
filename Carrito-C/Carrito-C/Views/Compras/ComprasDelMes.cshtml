@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Carrito_C.Models.Compra>;
+
+<div class="container">
+	@if (Model != null && Model.Count() > 0)
+	{
+		<h1 class="text-center mb-4">Compras del mes</h1>
+		<table class="table table-striped">
+			<tr>
+				<th scope="col">Cliente</th>
+				<th scope="col"># Compra</th>
+				<th scope="col">Fecha</th>
+				<th scope="col">Sucursal</th>
+				<th scope="col">Monto</th>
+				<th scope="col"></th>
+			</tr>
+			@{
+				double totalFacturado = 0;
+			}
+			@foreach (var item in Model)
+			{
+				totalFacturado += item.Total;
+				<tr>
+					<td>@Html.DisplayFor(modelItem => item.Cliente.Email)</td>
+					<td>@Html.DisplayFor(modelItem => item.Id)</td>
+					<td>@Html.DisplayFor(modelItem => item.FechaCompra)</td>
+					<td>@Html.DisplayFor(modelItem => item.Sucursal.Nombre)</td>
+					<td>@Html.DisplayFor(modelItem => item.Total)</td>
+				</tr>
+			}
+		</table>
+		<div class="alert alert-success text-center" role="alert">
+			Total: @(((decimal)totalFacturado).ToString("C2"))
+		</div>
+	}
+	else
+	{
+		<div class="container">
+			<div class="alert alert-danger text-center" role="alert">
+				Aun no se han realizado compras en el mes
+			</div>
+		</div>
+	}
+</div>
