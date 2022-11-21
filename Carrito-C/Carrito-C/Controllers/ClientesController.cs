@@ -10,6 +10,8 @@ using Carrito_C.Models;
 using Microsoft.AspNetCore.Authorization;
 using Carrito_C.Helpers;
 using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Carrito_C.Controllers
 {
@@ -17,178 +19,51 @@ namespace Carrito_C.Controllers
     public class ClientesController : Controller
     {
         private readonly CarritoCContext _context;
+        private readonly UserManager<Persona> _usermanager;
 
-        public ClientesController(CarritoCContext context)
+        public ClientesController(UserManager<Persona> usermanager, CarritoCContext context)
         {
             _context = context;
+            _usermanager = usermanager;
         }
 
-        // GET: Clientes
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = Configs.ClienteRolName)]
+        public async Task<IActionResult> Perfil()
         {
-              return View(await _context.Clientes.ToListAsync());
-        }
-        public async Task<IActionResult> AgregarAlCarrito()
-        {
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Cliente cliente = await _context.Clientes.FindAsync(userId);
 
-            return View(await _context.Clientes.ToListAsync());
-        }
-        // GET: Clientes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Clientes == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
-
-        // GET: Clientes/Create
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Clientes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Cliente cliente)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
-                Carrito carrito = new Carrito() { ClienteId = cliente.Id };
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cliente);
-        }
-
-        // GET: Clientes/Edit/5
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Clientes == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-            return View(cliente);
-        }
-
-        // POST: Clientes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Apellido,Dni,Telefono,Direccion,Email,FechaAlta,UserName,PasswordHash")] Cliente cliente)
-        {
-            if (id != cliente.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cliente);
-
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-                    }
-                    catch(DbUpdateException dbex)
-                    {
-                        SqlException innerException = dbex.InnerException as SqlException;
-                        if (innerException != null && (innerException.Number == 2627 || innerException.Number == 2601))
-                        {
-
-                            ModelState.AddModelError("CUIT", MsgError.CUITExistente);
-                        }
-                        else
-                        {
-                            ModelState.AddModelError(string.Empty, dbex.Message);
-                        }
-                    }
-                    return View(cliente);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cliente);
-        }
-
-        // GET: Clientes/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Clientes == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);
-        }
-
-        // POST: Clientes/Delete/5
-        [Authorize(Roles = "Admin")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Clientes == null)
-            {
-                return Problem("Entity set 'CarritoCContext.Clientes'  is null.");
-            }
-            var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
-                _context.Clientes.Remove(cliente);
+                return View(cliente);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return View("Error");
         }
 
-        private bool ClienteExists(int id)
+        [Authorize(Roles = Configs.ClienteRolName)]
+        public async Task<IActionResult> EditarPerfil()
         {
-          return _context.Clientes.Any(e => e.Id == id);
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Cliente cliente = await _context.Clientes.FindAsync(userId);
+
+            if (cliente != null)
+            {
+                return View(cliente);
+            }
+            return View("Error");
+        }
+
+        [Authorize(Roles = Configs.ClienteRolName)]
+        [HttpPost]
+        public async Task<IActionResult> EditarPerfil([Bind("Id,Telefono,Direccion")] Cliente clienteEditado)
+        {
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            Cliente cliente = await _context.Clientes.FindAsync(userId);
+            cliente.Direccion = clienteEditado.Direccion;
+            cliente.Telefono = clienteEditado.Telefono;
+            _context.Clientes.Update(cliente);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Perfil");
         }
     }
 }

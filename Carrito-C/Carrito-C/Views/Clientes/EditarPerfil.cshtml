@@ -1,0 +1,39 @@
+﻿@model Carrito_C.Models.Cliente
+
+@{
+    ViewData["Title"] = "Editar Perfil";
+}
+
+<div class="row justify-content-lg-center">
+    <div class="col-lg-6 m-md-4 sm-12 border p-4">
+        <h2 class="text-center text-uppercase">@ViewData["Title"]</h2>
+        <form asp-action="EditarPerfil">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Direccion" class="control-label"></label>
+                <input asp-for="Direccion" class="form-control" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-info" />
+                <a type="button" class="btn btn-secondary" asp-action="Perfil">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    <hr class="my-4">
+    <p class="lead">
+        <a class="btn btn-primary" asp-action="Index" asp-controller="Home">
+            Volver al Inicio
+        </a>
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

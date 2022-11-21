@@ -1,0 +1,20 @@
+﻿@model Carrito_C.Models.Cliente
+
+<div class="row justify-content-lg-center">
+    <div class="col-lg-6 m-md-4 sm-12 p-4">
+        <h1 class="text-center mb-4">Mi Perfil</h1>
+        <div class="mb-2">
+            <ul class="list-group">
+                <li class="list-group-item">Nombre: @Model.Nombre</li>
+                <li class="list-group-item">Apellido: @Model.Apellido</li>
+                <li class="list-group-item">DNI: @Model.Dni</li>
+                <li class="list-group-item">Dirección: @Model.Direccion</li>
+                <li class="list-group-item">Fecha de Alta: @Model.FechaAlta</li>
+                <li class="list-group-item">Teléfono: @Model.Telefono</li>
+                <li class="list-group-item">Email: @Model.Email</li>
+            </ul>
+            <a class="btn btn-info" asp-area="" asp-controller="Clientes" asp-action="EditarPerfil">Editar perfil</a>
+        </div>
+
+    </div>
+</div>

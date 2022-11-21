@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
+using Carrito_C.Helpers;
 
 namespace Carrito_C.Controllers
 {
@@ -22,7 +21,7 @@ namespace Carrito_C.Controllers
         }
 
         // Agrega 1 CarritoItem a la lista de CarritoItems del User
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         public async Task<IActionResult> AgregarAlCarrito(int productoId)
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));
@@ -59,7 +58,7 @@ namespace Carrito_C.Controllers
             return RedirectToAction(nameof(GetCarrito));
         }
         // Muestra el carrito del cliente
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         public async Task<IActionResult> GetCarrito()
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));
@@ -70,7 +69,7 @@ namespace Carrito_C.Controllers
             return View("GetCarrito", await carritoCliente.ToListAsync());
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         // Borra 1 CarritoItem de la lista de CarritoItems del User
         public async Task<IActionResult> RestarDelCarrito(int productoId)
         {
@@ -106,7 +105,7 @@ namespace Carrito_C.Controllers
             return RedirectToAction(nameof(GetCarrito));
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         // Elimina todos los productos del carrito
         public async Task<IActionResult> VaciarCarrito()
         {
@@ -133,6 +132,8 @@ namespace Carrito_C.Controllers
             return RedirectToAction(nameof(GetCarrito));
 
         }
+
+        [Authorize(Roles = Configs.ClienteRolName)]
         public async Task<IActionResult> EliminarProducto(int itemId)
         {
             CarritoItem item = _context.CarritoItems.FirstOrDefault(i => i.Id == itemId);

@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Carrito_C.Models.Compra>;
+
+<div class="container">
+	@if (Model != null && Model.Count() > 0)
+	{
+		<h1 class="text-center mb-4">Compras</h1>
+		<table class="table table-striped">
+			<tr>
+				<th scope="col"># Compra</th>
+				<th scope="col">Fecha</th>
+				<th scope="col">Sucursal</th>
+				<th scope="col">Monto</th>
+				<th scope="col"></th>
+			</tr>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@Html.DisplayFor(modelItem => item.Id)</td>
+					<td>@Html.DisplayFor(modelItem => item.FechaCompra)</td>
+					<td>@Html.DisplayFor(modelItem => item.Sucursal.Nombre)</td>
+					<td>@Html.DisplayFor(modelItem => item.Total)</td>
+					<td><a asp-action="DetalleCompra" asp-controller="Compras" 
+						asp-route-compraId="@item.Id" class="btn btn-sm btn-info">Ver detalle</a></td>
+				</tr>
+			}
+		</table>
+	}
+	else
+	{
+		<div class="container">
+			<div class="alert alert-danger text-center" role="alert">
+				Aun no ha realizado ninguna compra
+			</div>
+		</div>
+	}
+</div>
