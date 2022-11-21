@@ -36,5 +36,8 @@ namespace Carrito_C.Models
 
         [Display(Name = Alias.ImagenArchivo)]
         public string ImagenArchivo { get; set; }
+
+        [Required(ErrorMessage = MsgError.Requerido)]
+        public bool ProductoDelMes { get; set; }
     }
 }
