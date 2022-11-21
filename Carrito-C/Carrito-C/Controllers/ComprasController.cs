@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
@@ -10,6 +6,7 @@ using Carrito_C.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Carrito_C.Helpers;
 
 namespace Carrito_C.Controllers
 {
@@ -24,7 +21,7 @@ namespace Carrito_C.Controllers
             _usermanager = usermanager;
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         // Realiza la compra luego de elegir la sucursal
         public async Task<IActionResult> RealizarCompra(int sucursalId)
         {
@@ -67,6 +64,10 @@ namespace Carrito_C.Controllers
                             Cantidad = carritoItem.Cantidad,
                             Subtotal = carritoItem.Subtotal,
                         };
+                        StockItem stockItem = sucursal.ProductosSucursal
+                            .FirstOrDefault(s => s.ProductoId == compraItem.ProductoId);
+                        stockItem.Cantidad -= compraItem.Cantidad;
+                        _context.StockItems.Update(stockItem);
                         _context.ComprasItems.Add(compraItem);
                         _context.CarritoItems.Remove(carritoItem);
                     }
@@ -139,11 +140,37 @@ namespace Carrito_C.Controllers
         }
 
         // Muestra todas las sucursales disponibles
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         public IActionResult SeleccionLocal()
         {
             var sucursales = _context.Sucursales.ToList();
             return View("SeleccionLocal", sucursales);
+        }
+
+        [Authorize(Roles = Configs.ClienteRolName)]
+        public async Task<IActionResult> ClienteCompras(int compraId)
+        {
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            List<Compra> compras = await _context.Compras
+                .Where(c => c.ClienteId == userId)
+                .Include(c => c.Sucursal)
+                .OrderBy(c => c.FechaCompra)
+                .ToListAsync();
+
+            return View("ClienteCompras", compras);
+        }
+
+        [Authorize(Roles = Configs.ClienteRolName)]
+        public async Task<IActionResult> DetalleCompra(int compraId)
+        {
+            int userId = Int32.Parse(_usermanager.GetUserId(User));
+            List<ComprasItem> productosComprados = await _context.ComprasItems
+                .Where(c => c.CompraId == compraId)
+                .Include(c => c.Producto)
+                .ToListAsync();
+            Compra compra = await _context.Compras.FirstOrDefaultAsync(c => c.Id == compraId);
+            ViewBag.Total = compra.Total;
+            return View(productosComprados);
         }
 
     }

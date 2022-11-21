@@ -27,7 +27,7 @@ namespace Carrito_C.Controllers
             _usermanager = usermanager;
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         public async Task<IActionResult> Perfil()
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));
@@ -40,7 +40,7 @@ namespace Carrito_C.Controllers
             return View("Error");
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         public async Task<IActionResult> EditarPerfil()
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));
@@ -53,7 +53,7 @@ namespace Carrito_C.Controllers
             return View("Error");
         }
 
-        [Authorize(Roles = ("Cliente"))]
+        [Authorize(Roles = Configs.ClienteRolName)]
         [HttpPost]
         public async Task<IActionResult> EditarPerfil([Bind("Id,Telefono,Direccion")] Cliente clienteEditado)
         {
