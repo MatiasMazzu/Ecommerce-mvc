@@ -45,29 +45,43 @@ namespace Carrito_C.Controllers
 
             return View(sucursal);
         }
-
-        // GET: Sucursales/Create
+        // vista para crear una sucursal
+        // GET: Sucursales/CrearSucursal
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public IActionResult Create()
+        public IActionResult CrearSucursal()
         {
             return View();
         }
 
+        //Crea una sucursal y lo agrega a la db
         // POST: Sucursales/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
+        public async Task<IActionResult> CrearSucursal([Bind("Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sucursal);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Sucursal existeSucursal = _context.Sucursales.FirstOrDefault(s => s.Nombre == sucursal.Nombre);
+                if (existeSucursal == null)
+                {
+
+                    _context.Add(sucursal);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(sucursal);
+        }
+
+        // Lista todas las sucursales en la db
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> ListarSucursales()
+        {
+            var sucursales = this._context.Sucursales.Include(s => s.ProductosSucursal);
+            return View(await sucursales.ToListAsync());
         }
 
         // GET: Sucursales/Edit/5
@@ -125,7 +139,7 @@ namespace Carrito_C.Controllers
 
         // GET: Sucursales/Delete/5
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> DeleteSucursal(int? id)
         {
             if (id == null || _context.Sucursales == null)
             {
@@ -144,7 +158,7 @@ namespace Carrito_C.Controllers
 
         // POST: Sucursales/Delete/5
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteSucursal")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

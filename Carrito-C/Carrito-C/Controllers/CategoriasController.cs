@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
+using Carrito_C.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Carrito_C.Controllers
 {
@@ -43,24 +46,28 @@ namespace Carrito_C.Controllers
             return View(categoria);
         }
 
-        // GET: Categorias/Create
-        public IActionResult Create()
+        // GET: Categorias/CrearCategoria
+        public IActionResult CrearCategoria()
         {
             return View();
         }
 
-        // POST: Categorias/Create
+        // POST: Categorias/CrearCategoria
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Descripcion")] Categoria categoria)
+        public async Task<IActionResult> CrearCategoria([Bind("Nombre,Descripcion")] Categoria categoria)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(categoria);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Categoria existeCategoria = _context.Categorias.FirstOrDefault(c => c.Nombre == categoria.Nombre);
+                {
+                    _context.Add(categoria);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View(categoria);
         }
