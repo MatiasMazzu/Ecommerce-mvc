@@ -34,9 +34,10 @@ namespace Carrito_C.Controllers
             ViewData["Roles"] = new SelectList(_context.Roles.Where(r => r.Name != "Cliente"));
             return View();
         }
+
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [HttpPost]
-        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido, Dni, Telefono, Rol")] RegistroEmpleado viewmodel)
+        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido, Dni, Telefono, Rol, Direccion")] RegistroEmpleado viewmodel)
         {
             if (ModelState.IsValid)
             {
@@ -51,6 +52,7 @@ namespace Carrito_C.Controllers
                         Apellido = viewmodel.Apellido,
                         Dni = viewmodel.Dni,
                         Telefono = viewmodel.Telefono,
+                        Direccion = viewmodel.Direccion,
                         UserName = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty),
                         Email = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty)
                     };

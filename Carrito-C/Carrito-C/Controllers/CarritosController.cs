@@ -134,6 +134,7 @@ namespace Carrito_C.Controllers
         }
 
         [Authorize(Roles = Configs.ClienteRolName)]
+        // Borra un producto del carrito con sus cantidades
         public async Task<IActionResult> EliminarProducto(int itemId)
         {
             CarritoItem item = _context.CarritoItems.FirstOrDefault(i => i.Id == itemId);
