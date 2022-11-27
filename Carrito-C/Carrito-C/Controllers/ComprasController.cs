@@ -86,7 +86,7 @@ namespace Carrito_C.Controllers
             }
             else
             {
-                return View("Error");
+                return View("Error404");
             }
         }
 

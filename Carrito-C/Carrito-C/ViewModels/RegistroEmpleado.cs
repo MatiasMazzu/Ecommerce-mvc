@@ -39,13 +39,13 @@ namespace Carrito_C.ViewModels
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.Password)]
         [Display(Name = Alias.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = "Password1!";
 
         [Required(ErrorMessage = MsgError.Requerido)]
         [DataType(DataType.Password)]
         [Display(Name = Alias.ConfirmPassword)]
         [Compare("Password", ErrorMessage = MsgError.PassMissMatch)]
-        public string ConfirmacionPassword { get; set; }
+        public string ConfirmacionPassword { get; set; } = "Password1!";
 
         public string Rol { get; set; }
     }

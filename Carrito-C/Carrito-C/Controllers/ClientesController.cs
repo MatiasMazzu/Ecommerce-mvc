@@ -37,7 +37,7 @@ namespace Carrito_C.Controllers
             {
                 return View(cliente);
             }
-            return View("Error");
+            return View("Error404");
         }
 
         [Authorize(Roles = Configs.ClienteRolName)]
@@ -50,11 +50,12 @@ namespace Carrito_C.Controllers
             {
                 return View(cliente);
             }
-            return View("Error");
+            return View("Error404");
         }
 
         [Authorize(Roles = Configs.ClienteRolName)]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditarPerfil([Bind("Id,Telefono,Direccion")] Cliente clienteEditado)
         {
             int userId = Int32.Parse(_usermanager.GetUserId(User));

@@ -22,149 +22,83 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
-        // GET: Sucursales
-        public async Task<IActionResult> Index()
-        {
-              return View(await _context.Sucursales.ToListAsync());
-        }
-
-        // GET: Sucursales/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Sucursales == null)
-            {
-                return NotFound();
-            }
-
-            var sucursal = await _context.Sucursales
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sucursal == null)
-            {
-                return NotFound();
-            }
-
-            return View(sucursal);
-        }
-
-        // GET: Sucursales/Create
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public IActionResult Create()
+        public IActionResult CrearSucursal()
         {
             return View();
         }
 
-        // POST: Sucursales/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
+        public async Task<IActionResult> CrearSucursal([Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sucursal);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sucursal);
-        }
-
-        // GET: Sucursales/Edit/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Sucursales == null)
-            {
-                return NotFound();
-            }
-
-            var sucursal = await _context.Sucursales.FindAsync(id);
-            if (sucursal == null)
-            {
-                return NotFound();
-            }
-            return View(sucursal);
-        }
-
-        // POST: Sucursales/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,Telefono,Email")] Sucursal sucursal)
-        {
-            if (id != sucursal.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                Sucursal existeSucursal = await _context.Sucursales.FirstOrDefaultAsync(s => s.Nombre == sucursal.Nombre);
+                if (existeSucursal == null)
                 {
-                    _context.Update(sucursal);
+                    _context.Sucursales.Add(sucursal);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("ListarSucursales");
                 }
-                catch (DbUpdateConcurrencyException)
+            }
+            return View(sucursal);
+        }
+
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> ListarSucursales()
+        {
+            return View(await _context.Sucursales
+                .Include(s => s.ProductosSucursal).ToListAsync());
+        }
+
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> EliminarSucursal(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error404");
+            }
+            bool existeSucursal = await _context.Sucursales.AnyAsync(s => s.Id == id);
+            if (!existeSucursal)
+            {
+                return View("Error404");
+            }
+            else
+            {
+                var stockItems = _context.StockItems.Where(s => s.SucursalId == id);
+                Sucursal sucursal = _context.Sucursales.Find(id);
+
+                if (stockItems != null)
                 {
-                    if (!SucursalExists(sucursal.Id))
+                    var stock = 0;
+                    foreach (var item in stockItems)
                     {
-                        return NotFound();
+                        stock += item.Cantidad;
+                    }
+                    if (stock == 0)
+                    {
+                        foreach (var item in stockItems)
+                        {
+                            _context.StockItems.Remove(item);
+                        }
+                        _context.Sucursales.Remove(sucursal);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction("ListarSucursales");
                     }
                     else
                     {
-                        throw;
+                        return RedirectToAction("ListarSucursales");
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    _context.Sucursales.Remove(sucursal);
+                }
+                return RedirectToAction("ListarSucursales");
             }
-            return View(sucursal);
         }
 
-        // GET: Sucursales/Delete/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Sucursales == null)
-            {
-                return NotFound();
-            }
-
-            var sucursal = await _context.Sucursales
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sucursal == null)
-            {
-                return NotFound();
-            }
-
-            return View(sucursal);
-        }
-
-        // POST: Sucursales/Delete/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Sucursales == null)
-            {
-                return Problem("Entity set 'CarritoCContext.Sucursales'  is null.");
-            }
-            var sucursal = await _context.Sucursales.FindAsync(id);
-            if (sucursal != null)
-            {
-                _context.Sucursales.Remove(sucursal);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool SucursalExists(int id)
-        {
-          return _context.Sucursales.Any(e => e.Id == id);
-        }
     }
 }

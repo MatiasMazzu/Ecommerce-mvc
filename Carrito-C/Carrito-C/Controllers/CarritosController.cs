@@ -99,7 +99,7 @@ namespace Carrito_C.Controllers
                 }
                 else
                 {
-                    return View("Error");
+                    return View("Error404");
                 }
             }
             return RedirectToAction(nameof(GetCarrito));
@@ -126,7 +126,7 @@ namespace Carrito_C.Controllers
             }
             else
             {
-                return View("Error");
+                return View("Error404");
             }
 
             return RedirectToAction(nameof(GetCarrito));
