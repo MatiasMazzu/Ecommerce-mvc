@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Carrito_C.Models.Sucursal>
+
+@{
+    ViewData["Title"] = "Sucursales";
+}
+
+<h1 class="text-center mb-4">Productos</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Direccion</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Productos en Stock</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var stock = 0;
+            foreach (var i in item.ProductosSucursal) { stock += i.Cantidad; }
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@stock</td>
+                <td >
+                    @{ if (stock == 0)
+                        {
+                            <a class="btn btn-danger btn-sm m-1" asp-action="EliminarSucursal" asp-route-id="@item.Id">
+                                Eliminar
+                            </a>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger btn-sm m-1 btn-block" disabled>Eliminar</button>
+                        }
+                    } 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

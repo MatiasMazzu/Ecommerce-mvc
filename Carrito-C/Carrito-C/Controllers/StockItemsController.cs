@@ -17,173 +17,95 @@ namespace Carrito_C.Controllers
     [Authorize]
     public class StockItemsController : Controller
     {
-        private readonly UserManager<Persona> _usermanager;
-        private readonly RoleManager<Rol> _rolManager;
         private readonly CarritoCContext _context;
-    
-    public StockItemsController(UserManager<Persona> usermanager, RoleManager<Rol> rolManager, CarritoCContext contexto)
-    {
-        this._usermanager = usermanager;
-        this._rolManager = rolManager;
-        this._context = contexto;
-    }
 
-        // GET: StockItems
-        public async Task<IActionResult> Index()
+        public StockItemsController(CarritoCContext contexto)
         {
-            var carritoCContext = _context.StockItems.Include(s => s.Producto).Include(s => s.Sucursal);
-            return View(await carritoCContext.ToListAsync());
+            this._context = contexto;
         }
-
-        // GET: StockItems/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> ListarStockItems()
         {
-            if (id == null || _context.StockItems == null)
-            {
-                return NotFound();
-            }
-
-            var stockItem = await _context.StockItems
+            List<StockItem> stockItems = await _context.StockItems
                 .Include(s => s.Producto)
+                .ThenInclude(p => p.Categoria)
                 .Include(s => s.Sucursal)
-                .FirstOrDefaultAsync(m => m.ProductoId == id);
-            if (stockItem == null)
-            {
-                return NotFound();
-            }
-
-            return View(stockItem);
+                .OrderBy(s => s.Sucursal)
+                .ToListAsync();
+            return View(stockItems);
         }
 
-        // GET: StockItems/Create
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public IActionResult Create()
+        public async Task<IActionResult> ModificarStock(int itemId, string accion)
         {
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion");
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion");
-            return View();
-        }
-
-        // POST: StockItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductoId,SucursalId,Cantidad")] StockItem stockItem)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(stockItem);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", stockItem.ProductoId);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", stockItem.SucursalId);
-            return View(stockItem);
-        }
-
-        // GET: StockItems/Edit/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.StockItems == null)
-            {
-                return NotFound();
-            }
-
-            var stockItem = await _context.StockItems.FindAsync(id);
-            if (stockItem == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", stockItem.ProductoId);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", stockItem.SucursalId);
-            return View(stockItem);
-        }
-
-        // POST: StockItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductoId,SucursalId,Cantidad")] StockItem stockItem)
-        {
-            if (id != stockItem.ProductoId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(stockItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StockItemExists(stockItem.ProductoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductoId"] = new SelectList(_context.Productos, "Id", "Descripcion", stockItem.ProductoId);
-            ViewData["SucursalId"] = new SelectList(_context.Sucursales, "Id", "Direccion", stockItem.SucursalId);
-            return View(stockItem);
-        }
-
-        // GET: StockItems/Delete/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.StockItems == null)
-            {
-                return NotFound();
-            }
-
-            var stockItem = await _context.StockItems
-                .Include(s => s.Producto)
-                .Include(s => s.Sucursal)
-                .FirstOrDefaultAsync(m => m.ProductoId == id);
-            if (stockItem == null)
-            {
-                return NotFound();
-            }
-
-            return View(stockItem);
-        }
-
-        // POST: StockItems/Delete/5
-        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.StockItems == null)
-            {
-                return Problem("Entity set 'CarritoCContext.StockItems'  is null.");
-            }
-            var stockItem = await _context.StockItems.FindAsync(id);
+            StockItem stockItem = await _context.StockItems.FirstOrDefaultAsync(s => s.Id == itemId);
             if (stockItem != null)
             {
-                _context.StockItems.Remove(stockItem);
+                if (accion == "sumar") stockItem.Cantidad++;
+                else if (accion == "restar") stockItem.Cantidad--;
+                else return View("Error404");
+                _context.StockItems.Update(stockItem);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("ListarStockItems");
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("ListarStockItems");
         }
 
-        private bool StockItemExists(int id)
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> CrearStockItem()
         {
-          return _context.StockItems.Any(e => e.ProductoId == id);
+            List<StockItem> stockItems = _context.StockItems.Include(s => s.Producto).ToList();
+            List<Producto> productos = await _context.Productos.ToListAsync();
+            List<Producto> productosSinStockItems = new List<Producto>();
+
+            foreach (Producto producto in productos)
+            {
+                if (!stockItems.Any(s => s.ProductoId == producto.Id))
+                {
+                    productosSinStockItems.Add(producto);
+                }
+            };
+            ViewData["ProductosId"] = new SelectList(productosSinStockItems, "Id", "Nombre");
+            ViewData["SucursalesId"] = new SelectList(_context.Sucursales, "Id", "Nombre");
+
+            if (productosSinStockItems.Count() > 0) return View();
+            return View("NoHayProductos");
         }
+
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CrearStockItem(int sucursalId, int productoId, int cantidad)
+        {
+            var stockItem = await _context.StockItems.FirstOrDefaultAsync(s => s.ProductoId == productoId && s.SucursalId == sucursalId);
+            if (stockItem == null)
+            {
+                Sucursal sucursal = await _context.Sucursales.FirstOrDefaultAsync(s => s.Id == sucursalId);
+                Producto producto = await _context.Productos.FirstOrDefaultAsync(p => p.Id == productoId);
+                if (sucursal != null && producto != null)
+                {
+                    StockItem nuevoStockItem = new StockItem()
+                    {
+                        Producto = producto,
+                        ProductoId = productoId,
+                        Cantidad = cantidad,
+                        Sucursal = sucursal,
+                        SucursalId = sucursalId
+                    };
+                    _context.StockItems.Update(nuevoStockItem);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("ListarStockItems");
+                }
+                else
+                {
+                    return View("Error404");
+                }
+            }
+            stockItem.Cantidad = cantidad;
+            _context.StockItems.Update(stockItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ListarStockItems");
+        }
+
     }
 }

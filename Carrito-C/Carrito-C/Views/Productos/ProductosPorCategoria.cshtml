@@ -30,9 +30,9 @@
                         {
                             if (!signInManager.IsSignedIn(User) || User.IsInRole(Configs.AdminRolName))
                             {
-                                <a class="btn btn-primary btn-block text-uppercase" asp-action="AgregarAlCarrito" asp-controller="Carritos"
+                                <a class="btn btn-primary btn-block" asp-action="AgregarAlCarrito" asp-controller="Carritos"
                    asp-route-productoId=@item.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
-                                    Agregar al carrito
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
                                 </a>
                             }
                         }

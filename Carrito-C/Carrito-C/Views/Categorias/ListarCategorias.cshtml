@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Carrito_C.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Categorias";
+}
+
+<h1 class="text-center mb-4">Categorías</h1>
+<table class="table table-striped table-bordered table-responsive-sm">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

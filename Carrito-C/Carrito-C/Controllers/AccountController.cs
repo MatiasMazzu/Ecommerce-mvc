@@ -34,9 +34,11 @@ namespace Carrito_C.Controllers
             ViewData["Roles"] = new SelectList(_context.Roles.Where(r => r.Name != "Cliente"));
             return View();
         }
+
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         [HttpPost]
-        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido, Dni, Telefono, Rol")] RegistroEmpleado viewmodel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrarEmpleado([Bind("Nombre, Apellido, Dni, Direccion, Telefono, Email")] RegistroEmpleado viewmodel)
         {
             if (ModelState.IsValid)
             {
@@ -51,16 +53,16 @@ namespace Carrito_C.Controllers
                         Apellido = viewmodel.Apellido,
                         Dni = viewmodel.Dni,
                         Telefono = viewmodel.Telefono,
-                        UserName = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty),
-                        Email = Regex.Replace(viewmodel.Nombre + viewmodel.Apellido + Configs.Email, @"\s+", String.Empty)
+                        Direccion = viewmodel.Direccion,
+                        UserName = viewmodel.Email,
+                        Email = viewmodel.Email
                     };
-                    var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, Configs.PasswordGenerica);
+                    var resultadoCreate = await _usermanager.CreateAsync(empleadoACrear, viewmodel.Password);
                     if (resultadoCreate.Succeeded)
                     {
-                        var resultadoAddRole = await _usermanager.AddToRoleAsync(empleadoACrear, Configs.EmpleadoRolName);
-                        if (resultadoCreate.Succeeded)
+                        var resultadoAddRole = await _usermanager.AddToRoleAsync(empleadoACrear, viewmodel.Rol);
+                        if (resultadoAddRole.Succeeded)
                         {
-                            await _signInManager.SignInAsync(empleadoACrear, isPersistent: false);
                             return RedirectToAction("Index", "Home");
                         }
                         else
@@ -68,17 +70,17 @@ namespace Carrito_C.Controllers
                             ModelState.AddModelError(String.Empty, $"no se pudo agregar el rol de {Configs.ClienteRolName}");
                         }
                     }
-                    foreach (var error in resultadoCreate.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Ya existe un empleado con este DNI ");
                 }
             }
             return View(viewmodel);
 
         }
 
-        private static Cliente GetClienteACrear(RegistroUsuario viewmodel)
+        private static Cliente GetClienteACrear( RegistroUsuario viewmodel)
         {
             return new Cliente()
             {
@@ -86,6 +88,7 @@ namespace Carrito_C.Controllers
                 UserName = viewmodel.Email
             };
         }
+
         private async Task<IActionResult> RegistrarRole(Persona user, string rolName, string password)
         {
             var resultadoCreate = await _usermanager.CreateAsync(user, password);
@@ -116,6 +119,7 @@ namespace Carrito_C.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registrar([Bind("Nombre, Apellido, Dni, Direccion, Telefono, Email, Password, ConfirmacionPassword")] RegistroUsuario viewmodel)
         {
             if (ModelState.IsValid)
@@ -193,6 +197,7 @@ namespace Carrito_C.Controllers
 
         [AllowAnonymous]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> IniciarSesion(Login viewmodel)
         {
             if (ModelState.IsValid)
@@ -215,6 +220,7 @@ namespace Carrito_C.Controllers
             return View(viewmodel);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> CerrarSesion()
         {
             await _signInManager.SignOutAsync();

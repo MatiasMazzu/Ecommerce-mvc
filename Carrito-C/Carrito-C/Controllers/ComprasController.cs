@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Carrito_C.Data;
 using Carrito_C.Models;
@@ -87,7 +86,7 @@ namespace Carrito_C.Controllers
             }
             else
             {
-                return View("Error");
+                return View("Error404");
             }
         }
 

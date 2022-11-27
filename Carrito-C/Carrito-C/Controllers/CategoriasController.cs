@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,147 +22,39 @@ namespace Carrito_C.Controllers
             _context = context;
         }
 
-        // GET: Categorias
-        public async Task<IActionResult> Index()
-        {
-              return View(await _context.Categorias.ToListAsync());
-        }
-
-        // GET: Categorias/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Categorias == null)
-            {
-                return NotFound();
-            }
-
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return View(categoria);
-        }
-
-        // GET: Categorias/CrearCategoria
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
         public IActionResult CrearCategoria()
         {
             return View();
         }
 
-        // POST: Categorias/CrearCategoria
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CrearCategoria([Bind("Nombre,Descripcion")] Categoria categoria)
         {
             if (ModelState.IsValid)
             {
-                Categoria existeCategoria = _context.Categorias.FirstOrDefault(c => c.Nombre == categoria.Nombre);
+                var existeCategoria = await _context.Categorias.FirstOrDefaultAsync(c => c.Nombre == categoria.Nombre);
+                if (existeCategoria == null)
                 {
-                    _context.Add(categoria);
+                    _context.Categorias.Add(categoria);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("ListarCategorias");
                 }
-            }
-            return View(categoria);
-        }
-
-        // GET: Categorias/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Categorias == null)
-            {
-                return NotFound();
-            }
-
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-            return View(categoria);
-        }
-
-        // POST: Categorias/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Descripcion")] Categoria categoria)
-        {
-            if (id != categoria.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                else
                 {
-                    _context.Update(categoria);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError(string.Empty, "Categoria existente.");
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CategoriaExists(categoria.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
             return View(categoria);
         }
 
-        // GET: Categorias/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
+        public async Task<IActionResult> ListarCategorias()
         {
-            if (id == null || _context.Categorias == null)
-            {
-                return NotFound();
-            }
-
-            var categoria = await _context.Categorias
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (categoria == null)
-            {
-                return NotFound();
-            }
-
-            return View(categoria);
+            return View(await _context.Categorias.ToListAsync());
         }
 
-        // POST: Categorias/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Categorias == null)
-            {
-                return Problem("Entity set 'CarritoCContext.Categorias'  is null.");
-            }
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria != null)
-            {
-                _context.Categorias.Remove(categoria);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CategoriaExists(int id)
-        {
-          return _context.Categorias.Any(e => e.Id == id);
-        }
     }
 }

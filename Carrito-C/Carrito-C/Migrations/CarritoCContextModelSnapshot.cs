@@ -209,6 +209,9 @@ namespace Carrito_C.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductoId", "SucursalId");
 
                     b.HasIndex("SucursalId");
