@@ -26,7 +26,7 @@
                         }
                         else
                         {
-                            if (User.IsInRole("Cliente"))
+                            if (User.IsInRole(Configs.ClienteRolName) || !signInManager.IsSignedIn(User))
                             {
                                 <a class="btn btn-primary btn-block" asp-action="AgregarAlCarrito" asp-controller="Carritos"
                    asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
