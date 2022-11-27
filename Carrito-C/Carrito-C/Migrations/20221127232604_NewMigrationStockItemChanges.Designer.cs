@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Carrito_C.Migrations
 {
     [DbContext(typeof(CarritoCContext))]
-    [Migration("20221127021000_NewMigrationStockItemChanges")]
+    [Migration("20221127232604_NewMigrationStockItemChanges")]
     partial class NewMigrationStockItemChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -209,9 +209,6 @@ namespace Carrito_C.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.HasKey("ProductoId", "SucursalId");

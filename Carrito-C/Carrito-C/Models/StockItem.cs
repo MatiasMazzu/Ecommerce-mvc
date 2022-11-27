@@ -6,14 +6,13 @@ namespace Carrito_C.Models
     public class StockItem
     {
         [Key]
-        public int Id { get; set; }
-
         [Required(ErrorMessage = MsgError.Requerido)]
         [Display(Name = Alias.ProductoId)]
         
         public int ProductoId { get; set; } 
         public Producto Producto { get; set; }
 
+        [Key]
         [Required(ErrorMessage = MsgError.Requerido)]
         [Display(Name = Alias.SucursalId)]
         public int SucursalId { get; set; } 

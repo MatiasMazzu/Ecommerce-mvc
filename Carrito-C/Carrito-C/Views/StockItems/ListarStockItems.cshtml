@@ -32,13 +32,13 @@
                 </td>
                 <td>
                     <a class="btn btn-sm btn btn-info m-1"
-                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-itemId=@item.Id asp-route-accion="sumar"> + </a>
+                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-sucursalId=@item.SucursalId asp-route-productoId=@item.ProductoId asp-route-accion="sumar"> + </a>
                     @Html.DisplayFor(modelItem => item.Cantidad)
                     @{
                         if (item.Cantidad > 0)
                         {
                             <a class="btn btn-sm btn btn-info m-1"
-                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-itemId=@item.Id asp-route-accion="restar"> - </a>
+                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-sucursalId=@item.SucursalId asp-route-productoId=@item.ProductoId asp-route-accion="restar"> - </a>
                         }
                         else
                         {

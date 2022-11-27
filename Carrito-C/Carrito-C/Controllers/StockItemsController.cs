@@ -36,9 +36,10 @@ namespace Carrito_C.Controllers
         }
 
         [Authorize(Roles = Configs.AdminRolName + "," + Configs.EmpleadoRolName)]
-        public async Task<IActionResult> ModificarStock(int itemId, string accion)
+        public async Task<IActionResult> ModificarStock(int sucursalId, int productoId, string accion)
         {
-            StockItem stockItem = await _context.StockItems.FirstOrDefaultAsync(s => s.Id == itemId);
+            StockItem stockItem = await _context.StockItems
+                .FirstOrDefaultAsync(s => s.SucursalId == sucursalId && s.ProductoId == productoId);
             if (stockItem != null)
             {
                 if (accion == "sumar") stockItem.Cantidad++;
@@ -92,7 +93,7 @@ namespace Carrito_C.Controllers
                         Sucursal = sucursal,
                         SucursalId = sucursalId
                     };
-                    _context.StockItems.Update(nuevoStockItem);
+                    _context.StockItems.Add(nuevoStockItem);
                     await _context.SaveChangesAsync();
                     return RedirectToAction("ListarStockItems");
                 }

@@ -248,7 +248,6 @@ namespace Carrito_C.Migrations
                 {
                     ProductoId = table.Column<int>(type: "int", nullable: false),
                     SucursalId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
