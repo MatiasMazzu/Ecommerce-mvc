@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using Carrito_C.Helpers
 @using System.Security.Claims;
 @inject UserManager<Persona> userManager
@@ -80,12 +80,16 @@
 								<li class="nav-item dropdown">
 									<a class="nav-link text-dark dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Acciones</a>
 									<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+										<a class="dropdown-item text-dark" asp-controller="StockItems" asp-action="CrearStockItem">Crear nuevo stock</a>
+										<a class="dropdown-item text-dark" asp-controller="Categorias" asp-action="CrearCategoria">Crear categoria</a>
+										<a class="dropdown-item text-dark" asp-controller="Productos" asp-action="CrearProducto">Crear producto</a>
+										<a class="dropdown-item text-dark" asp-controller="Sucursales" asp-action="CrearSucursal">Crear sucursal</a>
+										<a class="dropdown-item text-dark" asp-controller="Categorias" asp-action="ListarCategorias">Listar categorias</a>
 										<a class="dropdown-item text-dark" asp-controller="Compras" asp-action="ComprasDelMes">Listar compras</a>
 										<a class="dropdown-item text-dark" asp-controller="Productos" asp-action="ListarProductos">Listar productos</a>
+										<a class="dropdown-item text-dark" asp-controller="StockItems" asp-action="ListarStockItems">Listar stock por sucursal</a>
+										<a class="dropdown-item text-dark" asp-controller="Sucursales" asp-action="ListarSucursales">Listar sucursales</a>
 										<a class="dropdown-item text-dark" asp-controller="Account" asp-action="RegistrarEmpleado">Registrar empleado</a>
-										<a class="dropdown-item text-dark" asp-controller="Productos" asp-action="CrearProducto">Crear producto</a>
-
-
 									</div>
 								</li>
 							}

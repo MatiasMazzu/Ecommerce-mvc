@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Carrito_C.Models.StockItem>
+@{
+    ViewData["Title"] = "Stock de productos";
+}
+
+<h1 class="text-center mb-4">Stock de productos</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 16.66%"></th>
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Sucursal</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img class="card-img-top img-fluid" src="~/img/product/@Html.DisplayFor(c => item.Producto.ImagenArchivo)" alt="Producto imagen">
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto.Categoria.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sucursal.Nombre)
+                </td>
+                <td>
+                    <a class="btn btn-sm btn btn-info m-1"
+                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-itemId=@item.Id asp-route-accion="sumar"> + </a>
+                    @Html.DisplayFor(modelItem => item.Cantidad)
+                    @{
+                        if (item.Cantidad > 0)
+                        {
+                            <a class="btn btn-sm btn btn-info m-1"
+                   asp-action="ModificarStock" asp-controller="StockItems" asp-route-itemId=@item.Id asp-route-accion="restar"> - </a>
+                        }
+                        else
+                        {
+                            <button disabled class="btn btn-sm btn btn-info m-1">-</button>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

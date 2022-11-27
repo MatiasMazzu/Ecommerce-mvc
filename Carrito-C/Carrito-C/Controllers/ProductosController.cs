@@ -39,12 +39,12 @@ namespace Carrito_C.Controllers
                 }
                 else
                 {
-                    return View("Error");
+                    return View("Error404");
                 }
             }
             else
             {
-                return View("Error");
+                return View("Error404");
             }
         }
 
@@ -94,7 +94,7 @@ namespace Carrito_C.Controllers
             Producto producto = await _context.Productos.FindAsync(id);
             if (producto == null)
             {
-                return View("Error");
+                return View("Error404");
             }
             else
             {
@@ -120,7 +120,7 @@ namespace Carrito_C.Controllers
 
             if (producto == null)
             {
-                return View("Error");
+                return View("Error404");
             }
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "Id", "Descripcion");
             return View(producto);
@@ -137,7 +137,8 @@ namespace Carrito_C.Controllers
                 Producto productoAEditar = await _context.Productos.FirstOrDefaultAsync(s => s.Id == id);
                 if (productoAEditar == null)
                 {
-                    return View("Error");
+                    return View("Error404");
+
                 }
                 else
                 {

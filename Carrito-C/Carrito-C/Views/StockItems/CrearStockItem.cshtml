@@ -1,0 +1,40 @@
+﻿@model Carrito_C.Models.StockItem
+
+@{
+    ViewData["Title"] = "Crear nuevo stock";
+}
+
+<h4>Crear nuevo stock</h4>
+
+<div class="row"
+    <div class="col-md-4">
+        <form asp-action="CrearStockItem">
+            <div class="form-group">
+                <label asp-for="Producto" class="control-label"></label>
+                <select asp-for="ProductoId" class="form-control" asp-items="ViewBag.ProductosId"></select>
+                <span asp-validation-for="ProductoId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sucursal" class="control-label"></label>
+                <select asp-for="SucursalId" class="form-control" asp-items="ViewBag.SucursalesId"></select>
+                <span asp-validation-for="SucursalId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cantidad" class="control-label"></label>
+                <input asp-for="Cantidad" class="form-control" />
+                <span asp-validation-for="Cantidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+            </div>
+            <div>
+                <a asp-action="ListarStockItems">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
