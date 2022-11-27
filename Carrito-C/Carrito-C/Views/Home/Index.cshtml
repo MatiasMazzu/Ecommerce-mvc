@@ -26,10 +26,17 @@
                         }
                         else
                         {
-                            if (User.IsInRole(Configs.ClienteRolName) || !signInManager.IsSignedIn(User))
+                            if (User.IsInRole("Cliente"))
                             {
                                 <a class="btn btn-primary btn-block" asp-action="AgregarAlCarrito" asp-controller="Carritos"
-                                    asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
+                   asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                </a>
+                            }
+                            else if (!signInManager.IsSignedIn(User))
+                            {
+                                <a class="btn btn-primary btn-block" asp-action="IniciarSesion" asp-controller="Account"
+                   asp-route-productoId=@productos.Id asp-route-returnUrl=@ViewBag.ReturnUrl>
                                     <i class="bi bi-cart-plus"></i> Agregar al carrito
                                 </a>
                             }
